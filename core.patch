@@ -1,0 +1,110 @@
+Index: core/oauthbase.cs
+===================================================================
+--- core/oauthbase.cs	(revision 1216)
++++ core/oauthbase.cs	(working copy)
+@@ -15,6 +15,23 @@
+     /// Edited by Claudio Cherubino and Alain Vongsouvanh
+     /// </summary>
+     public class OAuthBase {
++        private static IWebProxy _proxy;
++
++        public static IWebProxy Proxy
++        {
++            get
++            {
++                return _proxy;
++            }
++            set
++            {
++                _proxy = value;
++            }
++        }
++
++
++
++
+         public static string OAuthVersion = "1.0";
+         public static string OAuthParameterPrefix = "oauth_";
+ 
+@@ -438,7 +455,7 @@
+             Uri requestUri = new Uri(parameters.TokenUri);
+             WebRequest request = WebRequest.Create(requestUri);
+             request.Method = "POST";
+-
++            request.Proxy = _proxy;
+             request.ContentType = "application/x-www-form-urlencoded";
+ 
+             Stream outputStream = request.GetRequestStream();
+Index: core/oauthutil.cs
+===================================================================
+--- core/oauthutil.cs	(revision 1216)
++++ core/oauthutil.cs	(working copy)
+@@ -28,6 +28,24 @@
+     /// with Google OAuth requests.
+     /// </summary>
+     public class OAuthUtil {
++        private static IWebProxy _proxy;
++
++        public static IWebProxy Proxy
++        {
++            get
++            {
++                return _proxy;
++            }
++            set
++            {
++                OAuthBase.Proxy = value;
++                _proxy = value;
++            }
++        }
++
++
++
++
+         // Google OAuth endpoints
+         private static String requestTokenUrl = "https://www.google.com/accounts/OAuthGetRequestToken";
+         private static String userAuthorizationUrl = "https://www.google.com/accounts/OAuthAuthorizeToken";
+@@ -115,7 +133,7 @@
+             string headers = GenerateHeader(requestUri, "GET", parameters);
+             WebRequest request = WebRequest.Create(requestUri);
+             request.Headers.Add(headers);
+-
++            request.Proxy = _proxy;
+             WebResponse response = request.GetResponse();
+             string result = "";
+             if (response != null) {
+@@ -182,6 +200,7 @@
+             string headers = GenerateHeader(requestUri, "GET", parameters);
+             WebRequest request = WebRequest.Create(requestUri);
+             request.Headers.Add(headers);
++            request.Proxy = _proxy;
+ 
+             WebResponse response = request.GetResponse();
+             string result = "";
+Index: core/request.cs
+===================================================================
+--- core/request.cs	(revision 1216)
++++ core/request.cs	(working copy)
+@@ -278,6 +278,22 @@
+                 return this.customHeaders;
+             }
+         }
++
++        public IWebProxy Proxy
++        {
++            get
++            {
++                return this.webProxy;
++            }
++            set
++            {
++                this.webProxy = value;
++            }
++        }
++
++
++
++
+     }
+ 
+     /// <summary>base GDataRequest implementation</summary> 

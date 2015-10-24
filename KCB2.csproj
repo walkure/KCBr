@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{61D5139F-1447-4535-8EBF-165146F6A8A1}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KCB2</RootNamespace>
+    <AssemblyName>KCB2</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Google.GData.AccessControl, Version=2.2.0.0, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Google\Release\Google.GData.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Client, Version=2.2.0.0, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Google\Release\Google.GData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Extensions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Google\Release\Google.GData.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Spreadsheets, Version=2.2.0.0, Culture=neutral, PublicKeyToken=3f77feb76ff0d9a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Google\Release\Google.GData.Spreadsheets.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Json.NET\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BattleResult.cs" />
+    <Compile Include="BrowserSetting.cs" />
+    <Compile Include="COMParameters.cs" />
+    <Compile Include="CountdownLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DeckMemberList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DeckMemberList.Designer.cs">
+      <DependentUpon>DeckMemberList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockList.Designer.cs">
+      <DependentUpon>DockList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnemyFleetList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EnemyFleetList.Designer.cs">
+      <DependentUpon>EnemyFleetList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FleetList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FleetList.Designer.cs">
+      <DependentUpon>FleetList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormBadShipStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBadShipStatus.Designer.cs">
+      <DependentUpon>FormBadShipStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormBattleResultDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBattleResultDetail.Designer.cs">
+      <DependentUpon>FormBattleResultDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormItemList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormItemList.Designer.cs">
+      <DependentUpon>FormItemList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormJSONLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormJSONLog.Designer.cs">
+      <DependentUpon>FormJSONLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormJSONTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormJSONTest.Designer.cs">
+      <DependentUpon>FormJSONTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormLock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLock.Designer.cs">
+      <DependentUpon>FormLock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLog.Designer.cs">
+      <DependentUpon>FormLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMasterData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMasterData.Designer.cs">
+      <DependentUpon>FormMasterData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPreference.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPreference.Designer.cs">
+      <DependentUpon>FormPreference.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormQuestList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormQuestList.Designer.cs">
+      <DependentUpon>FormQuestList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormScreenShot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormScreenShot.Designer.cs">
+      <DependentUpon>FormScreenShot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSessionInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSessionInfo.Designer.cs">
+      <DependentUpon>FormSessionInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormShipList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormShipList.Designer.cs">
+      <DependentUpon>FormShipList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSlotItemList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSlotItemList.Designer.cs">
+      <DependentUpon>FormSlotItemList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormVolume.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormVolume.Designer.cs">
+      <DependentUpon>FormVolume.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HTTProxy.cs" />
+    <Compile Include="ListBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ListViewEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LogDataStructs.cs" />
+    <Compile Include="LogGenerator.cs" />
+    <Compile Include="LogManager.cs" />
+    <Compile Include="LogStore.cs" />
+    <Compile Include="MasterData\Item.cs" />
+    <Compile Include="MasterData\Mission.cs" />
+    <Compile Include="MasterData\Ship.cs" />
+    <Compile Include="MemberData\Basic.cs" />
+    <Compile Include="MemberData\Deck.cs" />
+    <Compile Include="MemberData\Dock.cs" />
+    <Compile Include="MemberData\Item.cs" />
+    <Compile Include="MemberData\Material.cs" />
+    <Compile Include="MemberData\Quest.cs" />
+    <Compile Include="MemberData\Ship.cs" />
+    <Compile Include="MissionList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MissionList.Designer.cs">
+      <DependentUpon>MissionList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormShipDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormShipDetail.Designer.cs">
+      <DependentUpon>FormShipDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JobQueue.cs" />
+    <Compile Include="ListViewExtensions.cs" />
+    <Compile Include="MemberData\MemberData.cs" />
+    <Compile Include="MixerAPI.cs" />
+    <Compile Include="ProcessImpl.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MaterialList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MaterialList.Designer.cs">
+      <DependentUpon>MaterialList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ResponseData.cs" />
+    <Compile Include="RingBuffer.cs" />
+    <Compile Include="RPCInterface.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SessionData.cs" />
+    <Compile Include="SessionProcessor.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="ShipStatusManager.cs" />
+    <Compile Include="SpreadsheetJob.cs" />
+    <Compile Include="SpreadSheetWrapper.cs" />
+    <Compile Include="SystemMenu.cs" />
+    <Compile Include="TableLayoutPanelEx.cs" />
+    <Compile Include="TimerRPC.cs" />
+    <Compile Include="VirtualListView.cs" />
+    <Compile Include="WebBrowserEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <EmbeddedResource Include="DeckMemberList.resx">
+      <DependentUpon>DeckMemberList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockList.resx">
+      <DependentUpon>DockList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnemyFleetList.resx">
+      <DependentUpon>EnemyFleetList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FleetList.resx">
+      <DependentUpon>FleetList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAbout.resx">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBadShipStatus.resx">
+      <DependentUpon>FormBadShipStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBattleResultDetail.resx">
+      <DependentUpon>FormBattleResultDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormItemList.resx">
+      <DependentUpon>FormItemList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormJSONLog.resx">
+      <DependentUpon>FormJSONLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormJSONTest.resx">
+      <DependentUpon>FormJSONTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormLock.resx">
+      <DependentUpon>FormLock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormLog.resx">
+      <DependentUpon>FormLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMasterData.resx">
+      <DependentUpon>FormMasterData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPreference.resx">
+      <DependentUpon>FormPreference.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormQuestList.resx">
+      <DependentUpon>FormQuestList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormScreenShot.resx">
+      <DependentUpon>FormScreenShot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSessionInfo.resx">
+      <DependentUpon>FormSessionInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormShipList.resx">
+      <DependentUpon>FormShipList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSlotItemList.resx">
+      <DependentUpon>FormSlotItemList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormVolume.resx">
+      <DependentUpon>FormVolume.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MissionList.resx">
+      <DependentUpon>MissionList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormShipDetail.resx">
+      <DependentUpon>FormShipDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="MaterialList.resx">
+      <DependentUpon>MaterialList.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SlotItemsSmallIcon.bmp" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

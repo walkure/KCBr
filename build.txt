@@ -1,0 +1,26 @@
+ビルド方法
+
+基本的にはcheckoutしてVSに食わせればいいんですが、そうもいかない事がある。
+
+.NET library for the Google Data API( https://code.google.com/p/google-gdata/ )が問題。
+
+gdataもKCBr2もJson.NETを使っているので、双方でバージョンが一致していないと実行時に例外が飛んで死ぬ。
+
+よって、Json.NETがアップデートした際はgdataを自分でbuildする必要がある。
+
+必要なファイルは以下。
+Google.GData.AccessControl.dll
+Google.GData.Client.dll
+Google.GData.Extensions.dll
+Google.GData.Spreadsheets.dll
+
+gdataをcheckoutしてbuildすると最終的に配布パッケージ作ろうとしてコケるので、buildしたbinary blobを拾ってきてKCBr2の
+ディレクトリに放り込んであげれば良い。
+
+なお、.NET Frameworkバージョンは一致している必要はないようです。
+
+gdataは.NET 2.0でKCBr2は.NET 4CPです。で、.NET 3.5 Frameworkが入ってない環境(Windows Server 2008とか)だと
+実行はできてもDebug時に実行時例外が飛んで死ぬ。
+
+OAuthトークン取得時にもプロキシを使えるよう、適当にいじっているのでcore.patchを適用するなり参照して書き換えるなり。
+

@@ -1,0 +1,16 @@
+KCBr - KanColle Browser
+
+
+艦隊これくしょんというFlashゲームをWindows環境下で全力するためのソフトウェア、所謂専ブラです。
+
+詳細は readme.txt 及び http://www.3pf.jp/products/kcb を参照してください。
+
+
+・ライセンスについて
+わたしが書いた部分についてはMIT License。
+
+それ以外の、外から持ってきたコード(詳しくはreadme.txtを参照)については出典のライセンスに従います。
+
+
+walkure<walkure at 3pf.jp>
+
