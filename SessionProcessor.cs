@@ -28,6 +28,14 @@ namespace KCB2
         /// </summary>
         public bool DuringCombat { get; private set; }
 
+        /// <summary>
+        /// クエスト情報のクリア
+        /// </summary>
+        public void ClearQuest()
+        {
+            _memberQuest.Clear();
+        }
+
         #region パラメータハンドル定義
         MasterData.Ship _masterShip = new MasterData.Ship();
         MasterData.Item _masterItem = new MasterData.Item();
@@ -60,12 +68,12 @@ namespace KCB2
             if (ships == 0)
                 title.AppendFormat(" 最大艦娘数:{0}", _memberBasic.MaxShip);
             else
-                title.AppendFormat(" 艦娘:{0}/{1}", ships, _memberBasic.MaxShip);
+                title.AppendFormat(" 艦娘:{0}/{1}({2})", ships, _memberBasic.MaxShip, _memberBasic.MaxShip - ships);
 
             if (items == 0)
                 title.AppendFormat(" 最大装備数:{0}", _memberBasic.MaxItem);
             else
-                title.AppendFormat(" 装備:{0}/{1}", items, _memberBasic.MaxItem);
+                title.AppendFormat(" 装備:{0}/{1}({2})", items, _memberBasic.MaxItem, _memberBasic.MaxItem-items);
 
             _parent.UpdateWindowTitle(title.ToString());
         }
@@ -200,7 +208,6 @@ namespace KCB2
                     _memberDeck.StartMission(queryParam, _masterMission);
                     _parent.UpdateDeckMemberList(_memberShip, _memberDeck.DeckList);
 
-                    UpdateDetailStatus("遠征を開始しました");
                     break;
 
                 case "/kcsapi/api_req_mission/result":
@@ -224,15 +231,16 @@ namespace KCB2
                     break;
 
                 case "/kcsapi/api_req_sortie/battle":
-                    DuringCombat = true;
-                    int battleWait = _battleResultManager.ProcessBattle(oSession.ResponseJSON,
-                        _memberShip,_memberDeck,_masterShip,_masterItem);
-                    _statusManager.StartBattle();
+                    {
+                        DuringCombat = true;
+                        int battleWait = _battleResultManager.ProcessBattle(oSession.ResponseJSON, false,
+                            _memberShip, _memberDeck, _masterShip, _masterItem);
+                        _statusManager.StartBattle();
 
-                    UpdateDetailStatus("戦闘を開始しました",battleWait);
-                    _parent.BeginWaitForNightBattle(battleWait,_battleResultManager.GetBattleResult());
-                    break;
-
+                        UpdateDetailStatus("戦闘を開始しました");
+                        _parent.BeginWaitForNightBattle(battleWait, _battleResultManager.GetBattleResult());
+                        break;
+                    }
                 case "/kcsapi/api_req_battle_midnight/battle":
                     MidnightBattle(oSession.ResponseJSON);
                     break;
@@ -260,11 +268,19 @@ namespace KCB2
                     break;
 
                 case "/kcsapi/api_req_practice/battle":
-                    DuringCombat = true;
-                    UpdateDetailStatus("演習を開始しました");
+                    {
+                        DuringCombat = true;
+                        int battleWait = _battleResultManager.ProcessBattle(oSession.ResponseJSON, true,
+                            _memberShip, _memberDeck, _masterShip, _masterItem);
+                        _statusManager.StartBattle();
+
+                        UpdateDetailStatus("演習を開始しました");
+                        _parent.BeginWaitForNightBattle(battleWait, _battleResultManager.GetBattleResult());
+                    }
                     break;
 
                 case "/kcsapi/api_req_practice/midnight_battle":
+                    _parent.EndWaitForNightBattle();
                     UpdateDetailStatus("夜戦演習へ移行しました");
                     break;
 
@@ -340,6 +356,8 @@ namespace KCB2
                      */
 
                 case "/kcsapi/api_req_combined_battle/airbattle":
+                /* 2016冬イベでの航空戦 */
+                case "/kcsapi/api_req_combined_battle/ld_airbattle":
                     _statusManager.StartBattle();
                     UpdateDetailStatus("航空戦を開始しました");
                     break;
@@ -360,6 +378,7 @@ namespace KCB2
                     /* 2014 秋イベでの水上聯合艦隊戦闘 */
                 case "/kcsapi/api_req_combined_battle/battle_water":
                     _statusManager.StartBattle();
+                    _parent.BeginWaitForNightBattle(100, null); // 適当に100秒にした
                     UpdateDetailStatus("戦闘を開始しました");
                     break;
 
@@ -379,7 +398,29 @@ namespace KCB2
                     UpdateDetailStatus("母港BGMを変更しました");
                     break;
 
-                    //無視するAPI勢
+                case "/kcsapi/api_req_hensei/preset_register":
+                    UpdateDetailStatus("第{0}艦隊の編成をスロット{1}へ記録しました",
+                        queryParam["api_deck_id"],queryParam["api_preset_no"]);
+                    break;
+                        
+                case "/kcsapi/api_req_hensei/preset_delete":
+                    UpdateDetailStatus("スロット{0}の編成記録を削除しました",
+                        queryParam["api_preset_no"]);
+                    break;
+
+                case "/kcsapi/api_req_hensei/preset_select":
+                    LoadPresetDeck(queryParam, responseJson);
+                    break;
+
+                case "/kcsapi/api_req_mission/return_instruction":
+                    _memberDeck.AbortMission(queryParam, responseJson);
+                    _parent.UpdateDeckMemberList(_memberShip, _memberDeck.DeckList);
+                    UpdateDetailStatus("第{0}艦隊が遠征を中断しました", queryParam["api_deck_id"]);
+
+                    break;
+
+
+                //無視するAPI勢
                     
                 case "/kcsapi/api_get_member/unsetslot":
                 case "/kcsapi/api_get_member/useitem":
@@ -391,6 +432,7 @@ namespace KCB2
                 case "/kcsapi/api_get_member/record":
                 case "/kcsapi/api_get_member/mission":
                 case "/kcsapi/api_get_member/sortie_conditions":
+                case "/kcsapi/api_get_member/preset_deck":
 
                 case "/kcsapi/api_req_member/payitemuse":
                 case "/kcsapi/api_req_member/itemuse":
@@ -403,8 +445,6 @@ namespace KCB2
                 case "/kcsapi/api_req_furniture/music_play":
 
                 case "/kcsapi/api_req_hensei/combined":
-
-                case "/kcsapi/api_req_mission/return_instruction":
 
                 case "/kcsapi/api_req_ranking/getlist":
 

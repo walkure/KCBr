@@ -24,5 +24,8 @@ namespace KCB.RPC
 
         [OperationContract]
         void ShowPreferenceForm();
+
+        [OperationContract]
+        void FinishBattle(string type);
     }
 }

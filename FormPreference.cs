@@ -99,7 +99,7 @@ namespace KCB2
 
             cbSyncronizeTimerProcess.Checked = Properties.Settings.Default.SyncronizeTimerProcess;
 
-            btTimerConf.Enabled = TimerRPCManager.ExistWCFServer;
+            btTimerConf.Enabled = TimerRPC.ExistWCFServer;
 
             numCondCeil.Value = Properties.Settings.Default.CondCeil;
 
@@ -149,6 +149,14 @@ namespace KCB2
             groupBox10.Enabled = cbUseUpstreamProxy.Checked = Properties.Settings.Default.UseUpstreamProxy;
             tbUpstreamProxyHost.Text = Properties.Settings.Default.UpstreamProxyHost;
             numUpstreamProxyPort.Value = Properties.Settings.Default.UpstreamProxyPort;
+            tbNotifyServerHost.Text = Properties.Settings.Default.NotificationServer;
+            if(TimerRPC.ServerHost.Length > 0)
+            {
+                cbSyncronizeTimerProcess.Checked = false;
+                cbSyncronizeTimerProcess.Enabled = false;
+            }
+            cbNotifyFinishBattle.Checked = Properties.Settings.Default.NotifyFinishBattle;
+
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -221,6 +229,8 @@ namespace KCB2
             Properties.Settings.Default.UseUpstreamProxy = cbUseUpstreamProxy.Checked;
             Properties.Settings.Default.UpstreamProxyHost = tbUpstreamProxyHost.Text;
             Properties.Settings.Default.UpstreamProxyPort = numUpstreamProxyPort.Value;
+            TimerRPC.ServerHost = Properties.Settings.Default.NotificationServer = tbNotifyServerHost.Text;
+            Properties.Settings.Default.NotifyFinishBattle = cbNotifyFinishBattle.Checked;
 
         }
 
@@ -374,6 +384,20 @@ namespace KCB2
         private void cbUseUpstreamProxy_CheckedChanged(object sender, EventArgs e)
         {
             groupBox10.Enabled = cbUseUpstreamProxy.Checked;
+        }
+
+        private void tbNotifyServerHost_TextChanged(object sender, EventArgs e)
+        {
+            if (tbNotifyServerHost.Text.Length == 0)
+            {
+                cbSyncronizeTimerProcess.Enabled = true;
+                cbSyncronizeTimerProcess.Checked = true;
+            }
+            else
+            {
+                cbSyncronizeTimerProcess.Checked = false;
+                cbSyncronizeTimerProcess.Enabled = false;
+            }
         }
     }
 }

@@ -121,6 +121,17 @@ namespace KCB2.MemberData
             return retList;
         }
 
+        /// <summary>
+        /// クエスト情報のクリア
+        /// </summary>
+        public void Clear()
+        {
+            _quest_list.Clear();
+        }
+
+        /// <summary>
+        /// クエスト内容を保持するクラス
+        /// </summary>
         public class Info : IComparable<Info>
         {
 

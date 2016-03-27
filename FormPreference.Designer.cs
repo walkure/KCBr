@@ -58,6 +58,7 @@
             this.btBrowseLogDir = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.btBrowseImageStore = new System.Windows.Forms.Button();
             this.tbImageStore = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -84,6 +85,11 @@
             this.tbUpstreamProxyHost = new System.Windows.Forms.TextBox();
             this.numProxyPort = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbNotifyServerHost = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cbNotifyFinishBattle = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numHPThreshold)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -99,6 +105,7 @@
             this.groupBox10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numUpstreamProxyPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numProxyPort)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnApply
@@ -148,7 +155,7 @@
             // cbDetailStatus
             // 
             this.cbDetailStatus.AutoSize = true;
-            this.cbDetailStatus.Location = new System.Drawing.Point(11, 40);
+            this.cbDetailStatus.Location = new System.Drawing.Point(11, 21);
             this.cbDetailStatus.Name = "cbDetailStatus";
             this.cbDetailStatus.Size = new System.Drawing.Size(189, 16);
             this.cbDetailStatus.TabIndex = 1;
@@ -168,7 +175,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 121);
+            this.label7.Location = new System.Drawing.Point(9, 80);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 12);
             this.label7.TabIndex = 5;
@@ -177,16 +184,16 @@
             // tbConfPath
             // 
             this.tbConfPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbConfPath.Location = new System.Drawing.Point(79, 117);
+            this.tbConfPath.Location = new System.Drawing.Point(79, 76);
             this.tbConfPath.Name = "tbConfPath";
             this.tbConfPath.ReadOnly = true;
-            this.tbConfPath.Size = new System.Drawing.Size(271, 19);
+            this.tbConfPath.Size = new System.Drawing.Size(300, 19);
             this.tbConfPath.TabIndex = 6;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(12, 58);
+            this.label15.Location = new System.Drawing.Point(99, 36);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(135, 12);
             this.label15.TabIndex = 0;
@@ -402,26 +409,36 @@
             this.groupBox4.Controls.Add(this.label15);
             this.groupBox4.Location = new System.Drawing.Point(522, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(195, 84);
+            this.groupBox4.Size = new System.Drawing.Size(255, 56);
             this.groupBox4.TabIndex = 6;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "大破進撃抑止";
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.label6);
             this.groupBox5.Controls.Add(this.btBrowseImageStore);
             this.groupBox5.Controls.Add(this.tbImageStore);
             this.groupBox5.Controls.Add(this.label11);
-            this.groupBox5.Location = new System.Drawing.Point(350, 194);
+            this.groupBox5.Location = new System.Drawing.Point(522, 146);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(368, 63);
+            this.groupBox5.Size = new System.Drawing.Size(255, 72);
             this.groupBox5.TabIndex = 8;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "スクリーンショット";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 31);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(162, 12);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "(空白でクリップボードへ転送のみ)";
+            // 
             // btBrowseImageStore
             // 
-            this.btBrowseImageStore.Location = new System.Drawing.Point(290, 33);
+            this.btBrowseImageStore.Location = new System.Drawing.Point(159, 46);
             this.btBrowseImageStore.Name = "btBrowseImageStore";
             this.btBrowseImageStore.Size = new System.Drawing.Size(23, 19);
             this.btBrowseImageStore.TabIndex = 2;
@@ -431,28 +448,28 @@
             // 
             // tbImageStore
             // 
-            this.tbImageStore.Location = new System.Drawing.Point(11, 34);
+            this.tbImageStore.Location = new System.Drawing.Point(11, 46);
             this.tbImageStore.Name = "tbImageStore";
-            this.tbImageStore.Size = new System.Drawing.Size(273, 19);
+            this.tbImageStore.Size = new System.Drawing.Size(142, 19);
             this.tbImageStore.TabIndex = 1;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 19);
+            this.label11.Location = new System.Drawing.Point(9, 16);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(212, 12);
+            this.label11.Size = new System.Drawing.Size(41, 12);
             this.label11.TabIndex = 0;
-            this.label11.Text = "保存先 (空白でクリップボードへの転送のみ)";
+            this.label11.Text = "保存先";
             // 
             // cbSyncronizeTimerProcess
             // 
             this.cbSyncronizeTimerProcess.AutoSize = true;
-            this.cbSyncronizeTimerProcess.Location = new System.Drawing.Point(11, 18);
+            this.cbSyncronizeTimerProcess.Location = new System.Drawing.Point(234, 15);
             this.cbSyncronizeTimerProcess.Name = "cbSyncronizeTimerProcess";
-            this.cbSyncronizeTimerProcess.Size = new System.Drawing.Size(213, 16);
+            this.cbSyncronizeTimerProcess.Size = new System.Drawing.Size(111, 16);
             this.cbSyncronizeTimerProcess.TabIndex = 0;
-            this.cbSyncronizeTimerProcess.Text = "出渠通知タイマを同時に起動/終了する";
+            this.cbSyncronizeTimerProcess.Text = "同時に起動/終了";
             this.cbSyncronizeTimerProcess.UseVisualStyleBackColor = true;
             // 
             // groupBox6
@@ -462,14 +479,12 @@
             this.groupBox6.Controls.Add(this.cbMuteOnMinimize);
             this.groupBox6.Controls.Add(this.cbActivateDevMenu);
             this.groupBox6.Controls.Add(this.cbUseMasterDataView);
-            this.groupBox6.Controls.Add(this.btTimerConf);
-            this.groupBox6.Controls.Add(this.cbSyncronizeTimerProcess);
             this.groupBox6.Controls.Add(this.cbDetailStatus);
             this.groupBox6.Controls.Add(this.label7);
             this.groupBox6.Controls.Add(this.tbConfPath);
-            this.groupBox6.Location = new System.Drawing.Point(351, 270);
+            this.groupBox6.Location = new System.Drawing.Point(351, 309);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(367, 141);
+            this.groupBox6.Size = new System.Drawing.Size(426, 105);
             this.groupBox6.TabIndex = 9;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "その他";
@@ -477,7 +492,7 @@
             // cbShowEnemyStatus
             // 
             this.cbShowEnemyStatus.AutoSize = true;
-            this.cbShowEnemyStatus.Location = new System.Drawing.Point(11, 60);
+            this.cbShowEnemyStatus.Location = new System.Drawing.Point(240, 21);
             this.cbShowEnemyStatus.Name = "cbShowEnemyStatus";
             this.cbShowEnemyStatus.Size = new System.Drawing.Size(174, 16);
             this.cbShowEnemyStatus.TabIndex = 2;
@@ -487,7 +502,7 @@
             // cbHideDrop
             // 
             this.cbHideDrop.AutoSize = true;
-            this.cbHideDrop.Location = new System.Drawing.Point(234, 40);
+            this.cbHideDrop.Location = new System.Drawing.Point(240, 40);
             this.cbHideDrop.Name = "cbHideDrop";
             this.cbHideDrop.Size = new System.Drawing.Size(127, 16);
             this.cbHideDrop.TabIndex = 8;
@@ -497,7 +512,7 @@
             // cbMuteOnMinimize
             // 
             this.cbMuteOnMinimize.AutoSize = true;
-            this.cbMuteOnMinimize.Location = new System.Drawing.Point(234, 60);
+            this.cbMuteOnMinimize.Location = new System.Drawing.Point(241, 58);
             this.cbMuteOnMinimize.Name = "cbMuteOnMinimize";
             this.cbMuteOnMinimize.Size = new System.Drawing.Size(103, 16);
             this.cbMuteOnMinimize.TabIndex = 9;
@@ -507,7 +522,7 @@
             // cbActivateDevMenu
             // 
             this.cbActivateDevMenu.AutoSize = true;
-            this.cbActivateDevMenu.Location = new System.Drawing.Point(11, 97);
+            this.cbActivateDevMenu.Location = new System.Drawing.Point(11, 58);
             this.cbActivateDevMenu.Name = "cbActivateDevMenu";
             this.cbActivateDevMenu.Size = new System.Drawing.Size(220, 16);
             this.cbActivateDevMenu.TabIndex = 4;
@@ -517,7 +532,7 @@
             // cbUseMasterDataView
             // 
             this.cbUseMasterDataView.AutoSize = true;
-            this.cbUseMasterDataView.Location = new System.Drawing.Point(11, 79);
+            this.cbUseMasterDataView.Location = new System.Drawing.Point(11, 40);
             this.cbUseMasterDataView.Name = "cbUseMasterDataView";
             this.cbUseMasterDataView.Size = new System.Drawing.Size(227, 16);
             this.cbUseMasterDataView.TabIndex = 3;
@@ -526,7 +541,7 @@
             // 
             // btTimerConf
             // 
-            this.btTimerConf.Location = new System.Drawing.Point(246, 14);
+            this.btTimerConf.Location = new System.Drawing.Point(217, 33);
             this.btTimerConf.Name = "btTimerConf";
             this.btTimerConf.Size = new System.Drawing.Size(75, 23);
             this.btTimerConf.TabIndex = 7;
@@ -539,9 +554,9 @@
             this.groupBox7.Controls.Add(this.label18);
             this.groupBox7.Controls.Add(this.numCondCeil);
             this.groupBox7.Controls.Add(this.label17);
-            this.groupBox7.Location = new System.Drawing.Point(522, 102);
+            this.groupBox7.Location = new System.Drawing.Point(522, 74);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(196, 84);
+            this.groupBox7.Size = new System.Drawing.Size(255, 66);
             this.groupBox7.TabIndex = 7;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "疲労回復インターバル表示";
@@ -549,7 +564,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(73, 50);
+            this.label18.Location = new System.Drawing.Point(73, 40);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(117, 12);
             this.label18.TabIndex = 2;
@@ -557,7 +572,7 @@
             // 
             // numCondCeil
             // 
-            this.numCondCeil.Location = new System.Drawing.Point(11, 48);
+            this.numCondCeil.Location = new System.Drawing.Point(11, 38);
             this.numCondCeil.Maximum = new decimal(new int[] {
             49,
             0,
@@ -586,7 +601,7 @@
             this.groupBox8.Controls.Add(this.clbShipDetail);
             this.groupBox8.Location = new System.Drawing.Point(350, 12);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(162, 174);
+            this.groupBox8.Size = new System.Drawing.Size(162, 206);
             this.groupBox8.TabIndex = 5;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "艦船詳細表示";
@@ -597,7 +612,7 @@
             this.clbShipDetail.FormattingEnabled = true;
             this.clbShipDetail.Location = new System.Drawing.Point(15, 18);
             this.clbShipDetail.Name = "clbShipDetail";
-            this.clbShipDetail.Size = new System.Drawing.Size(133, 144);
+            this.clbShipDetail.Size = new System.Drawing.Size(133, 172);
             this.clbShipDetail.TabIndex = 0;
             this.clbShipDetail.DragDrop += new System.Windows.Forms.DragEventHandler(this.clbShipDetail_DragDrop);
             this.clbShipDetail.DragEnter += new System.Windows.Forms.DragEventHandler(this.clbShipDetail_DragEnter);
@@ -718,12 +733,64 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "傍受に使うプロキシポート";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.cbNotifyFinishBattle);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.tbNotifyServerHost);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.cbSyncronizeTimerProcess);
+            this.groupBox2.Controls.Add(this.btTimerConf);
+            this.groupBox2.Location = new System.Drawing.Point(350, 224);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(427, 80);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "遠征・出渠通知";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(13, 57);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(198, 12);
+            this.label8.TabIndex = 10;
+            this.label8.Text = "空白の際はマシン内のタイマに通知します";
+            // 
+            // tbNotifyServerHost
+            // 
+            this.tbNotifyServerHost.Location = new System.Drawing.Point(15, 35);
+            this.tbNotifyServerHost.Name = "tbNotifyServerHost";
+            this.tbNotifyServerHost.Size = new System.Drawing.Size(196, 19);
+            this.tbNotifyServerHost.TabIndex = 9;
+            this.tbNotifyServerHost.TextChanged += new System.EventHandler(this.tbNotifyServerHost_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(13, 16);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(220, 12);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "通知先(設定すると同時起動は作動しません)";
+            // 
+            // cbNotifyFinishBattle
+            // 
+            this.cbNotifyFinishBattle.AutoSize = true;
+            this.cbNotifyFinishBattle.Location = new System.Drawing.Point(300, 38);
+            this.cbNotifyFinishBattle.Name = "cbNotifyFinishBattle";
+            this.cbNotifyFinishBattle.Size = new System.Drawing.Size(105, 16);
+            this.cbNotifyFinishBattle.TabIndex = 11;
+            this.cbNotifyFinishBattle.Text = "戦闘終了を通知";
+            this.cbNotifyFinishBattle.UseVisualStyleBackColor = true;
+            // 
             // FormPreference
             // 
             this.AcceptButton = this.btnApply;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(730, 447);
+            this.ClientSize = new System.Drawing.Size(785, 447);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox9);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
@@ -766,6 +833,8 @@
             this.groupBox10.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numUpstreamProxyPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numProxyPort)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -828,5 +897,11 @@
         private System.Windows.Forms.NumericUpDown numProxyPort;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox tbNotifyServerHost;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox cbNotifyFinishBattle;
     }
 }

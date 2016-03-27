@@ -7,7 +7,7 @@ namespace KCBTimer
     /// <summary>
     /// WCFのRPCエンドポイント
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults = true)]
     public class RemoteHost : KCB.RPC.IUpdateNotification
     {
         public KCBTimer.Form1 _parent;
@@ -55,6 +55,13 @@ namespace KCBTimer
         public void UpdateConditionTimer(int fleetNum, string fleetName, DateTime finishTime)
         {
             _parent.UpdateConditionTimer(fleetNum, fleetName, finishTime);
+        }
+
+        public void FinishBattle(string type)
+        {
+            TimerHandlerListViewItem.PlaySound(Properties.Settings.Default.NotifySound);
+            _parent.ShowBaloonMessage("終了通知", string.Format("{0}が終了しました",type));
+            //not implemented yet
         }
     }
 }

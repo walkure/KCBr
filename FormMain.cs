@@ -283,11 +283,9 @@ namespace KCB2
                 Location = Properties.Settings.Default.MainFormLocation;
 
 
-            webBrowser1.DocumentCompleted += webBrowser1_DocumentCompleted;
             webBrowser1.Navigate(Properties.Settings.Default.GadgetURI);
             UpdateStatus("ゲームURIの読み込みを開始します");
 
-//            _logManager.LoadLog("802021");  
 
         }
 
@@ -411,40 +409,14 @@ namespace KCB2
         #endregion フォームハンドラ
 
         /// <summary>
-        /// ドキュメントHTML読み込み完了通知。インラインフレームの読み込みではない
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-            UpdateStatus("ドキュメントの読み込みを完了しました");
-            webBrowser1.DocumentCompleted -= webBrowser1_DocumentCompleted;
-
-            //インラインフレームの描画終了を待つタイマ
-            timerWaitPageLoad.Tick += timer1_WaitForLoadFlash;
-            timerWaitPageLoad.Enabled = true;
-        }
-
-        /// <summary>
-        /// インラインフレームの読み込みが終わるまで座標取得をチャレンジする
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void timer1_WaitForLoadFlash(object sender, EventArgs e)
-        {
-            if (adjustFlashPosition())
-            {
-                timerWaitPageLoad.Enabled = false;
-                timerWaitPageLoad.Tick -= timer1_WaitForLoadFlash;
-            }
-        }
-
-        /// <summary>
         /// フラッシュ位置を検出してウィンドウをスクロール
         /// </summary>
         /// <returns>成功したらtrue</returns>
         bool adjustFlashPosition()
         {
+            //もしリロード前に表示されていたら消す
+            enemyFleetList.Visible = false;
+
             KCB.WebBrowserEx.IWebBrowser2 wb = (webBrowser1.ActiveXInstance as KCB.WebBrowserEx.IWebBrowser2);
             mshtml.IHTMLDocument3 doc = (wb.Document as mshtml.IHTMLDocument3);
             mshtml.IHTMLElement elm = doc.getElementById("game_frame");
@@ -540,8 +512,14 @@ namespace KCB2
 
 
             //ゲーム開始時のトークンと時間を覚えておく
-            if (_watchSession && info.Uri.ToString().Contains("mainD2.swf"))
-                _logFirstSession(info.Uri.ToString());
+            if (info.Uri.ToString().Contains("mainD2.swf"))
+            {
+                //別スレッドから呼ばれるのでUIスレッドに処理を投げる
+                BeginInvoke((MethodInvoker)(() => adjustFlashPosition()));
+
+                if (_watchSession)
+                    _logFirstSession(info.Uri.ToString());
+            }
 
 
             /* 艦これAPI以外へのアクセスは全部無視する
@@ -805,6 +783,11 @@ namespace KCB2
                 _wndMaster.UpdateMaster(shipMaster,itemMaster);
         }
 
+        public void NotifyFinishBattle(string type)
+        {
+            _timerRPC.RPCFinishBattle(type);
+        }
+
         #endregion
 
         #region コントロールハンドラ
@@ -845,11 +828,9 @@ namespace KCB2
                 return;
 
             webBrowser1.Refresh(WebBrowserRefreshOption.Completely);
+            enemyFleetList.Visible = false;
             UpdateStatus("ゲーム画面の再読み込みを開始します");
 
-            //WebBrowser.RefreshだとDocumentCompletedが呼ばれない(とドキュメントにある。なんでや)。
-            timerWaitPageLoad.Tick += timer1_WaitForLoadFlash;
-            timerWaitPageLoad.Enabled = true;
         }
 
         IEnumerable<MemberData.Quest.Info> currentQuestList = null;
@@ -1087,7 +1068,7 @@ namespace KCB2
 
         private void sendTimerInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TimerRPCManager.ExistWCFServer)
+            if (!_timerRPC.ExistWCFServer)
             {
                 if (MessageBox.Show("タイマの起動を確認できませんでした。タイマを起動しますか？",
                     "KCBr2", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
@@ -1238,8 +1219,12 @@ namespace KCB2
             _logWnd.Show();
         }
 
-
-
+        private void clearQuestInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _processor.ClearQuest();
+            lbQuest.Items.Clear();
+            currentQuestList = null;
+        }
 
         #endregion
 
@@ -1352,6 +1337,7 @@ namespace KCB2
             return System.IO.Path.Combine(exeDir, "KCBTimer.exe");
         }
 
+        #region 夜戦突入前判定
         public void BeginWaitForNightBattle(int estimatedTickCount,BattleResult.Result result)
         {
             if (InvokeRequired)
@@ -1401,9 +1387,6 @@ namespace KCB2
 
         private void timerWaitForNightBattle_Tick(object sender, EventArgs e)
         {
-            if (_battleResult == null)
-                return;
-
             var img1 = webBrowser1.GetScreenShot();
 
             //「離脱判定」の文字部分座標エリア
@@ -1441,17 +1424,31 @@ namespace KCB2
             if (hashedText.ToString() == Properties.Settings.Default.WithdrawalKey)
             {
                 //離脱判定が表示されていたので、ステートを更新してタイマを終了する。
-                _processor._memberShip.ApplyBattleResult(_battleResult);
-                UpdateShipList(_processor._memberShip.ShipList);
-                UpdateDeckMemberList(_processor._memberShip, _processor._memberDeck.DeckList);
-                var st = _battleResult.BattleState;
-                Debug.WriteLine("戦闘結果予測" + st.ToString());
-
                 timerWaitForNightBattle.Enabled = false;
+                if (_battleResult != null)
+                {
+                    _processor._memberShip.ApplyBattleResult(_battleResult);
+                    UpdateShipList(_processor._memberShip.ShipList);
+                    UpdateDeckMemberList(_processor._memberShip, _processor._memberDeck.DeckList);
+                    var st = _battleResult.BattleState;
+                    Debug.WriteLine("戦闘結果予測" + st.ToString());
 
-                enemyFleetList.Visible = true;
-                enemyFleetList.Fleet = new EnemyFleetList.FleetInfo(_battleResult.Enemy);
-                enemyFleetList.BattleStatus = BattleResult.Result.BattleResultStateString(st);
+                    enemyFleetList.Visible = true;
+                    enemyFleetList.Fleet = new EnemyFleetList.FleetInfo(_battleResult.Enemy);
+                    enemyFleetList.BattleStatus = BattleResult.Result.BattleResultStateString(st);
+
+                    if (_battleResult.Practice)
+                        _timerRPC.RPCFinishBattle("昼戦演習");
+                    else
+                        _timerRPC.RPCFinishBattle("昼戦");
+                }
+                else
+                {
+                    // 連合艦隊の戦闘は解析してないから_battleResultはnullになってる
+                    _timerRPC.RPCFinishBattle("昼戦");
+                }
+
+
 
                 Debug.WriteLine("離脱判定を検出したのでUIを更新して終了");
                 return;
@@ -1461,5 +1458,7 @@ namespace KCB2
             timerWaitForNightBattle.Interval = 1000;
             Debug.WriteLine("離脱判定を検出できず。1秒ごとに再チェックしに行きます。");
         }
+        #endregion 夜戦突入前判定
+
     }
 }

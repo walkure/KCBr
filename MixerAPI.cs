@@ -565,7 +565,10 @@ namespace KCB2
         public class MixerException : Exception
         {
             public MixerException(string msg, uint err)
-                :base( string.Format("MixerException msg:{0},code:{1}",msg,err)) {}
+                :base( string.Format("MixerException msg:{0},code:{1}",msg,err))
+            {
+                Debug.WriteLine("MixerException:"+Message);
+            }
         }
 
         public MixerAPI()

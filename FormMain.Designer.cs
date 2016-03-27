@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.timerWaitPageLoad = new System.Windows.Forms.Timer(this.components);
             this.panelWebBrowserContainer = new System.Windows.Forms.Panel();
             this.enemyFleetList = new KCB2.EnemyFleetList();
             this.webBrowser1 = new KCB.WebBrowserEx();
@@ -59,6 +58,8 @@
             this.toolStripTimeFromLastBattle = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.tweakToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearQuestInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustFlashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,10 +83,6 @@
             this.groupDock.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // timerWaitPageLoad
-            // 
-            this.timerWaitPageLoad.Interval = 1500;
             // 
             // panelWebBrowserContainer
             // 
@@ -250,7 +247,7 @@
             this.toolStripTimeFromLastBattle,
             this.toolStripStatusLabel1,
             this.toolStripDropDownButton1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 482);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 481);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1014, 22);
             this.statusStrip1.SizingGrip = false;
@@ -349,7 +346,7 @@
             // 
             this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(723, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(692, 17);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = "レディ";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -359,10 +356,8 @@
             this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tweakToolStripMenuItem,
             this.reloadBrowserToolStripMenuItem,
-            this.adjustFlashToolStripMenuItem,
-            this.clearCacheToolStripMenuItem,
-            this.switchViewModeToolStripMenuItem,
             this.lockUIToolStripMenuItem,
             this.toolStripSeparator1,
             this.sendTimerInfoToolStripMenuItem,
@@ -374,6 +369,21 @@
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             this.toolStripDropDownButton1.Size = new System.Drawing.Size(42, 20);
             this.toolStripDropDownButton1.Text = "操作";
+            // 
+            // tweakToolStripMenuItem
+            // 
+            this.tweakToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.clearQuestInfoToolStripMenuItem,this.clearCacheToolStripMenuItem,this.switchViewModeToolStripMenuItem,this.adjustFlashToolStripMenuItem});
+            this.tweakToolStripMenuItem.Name = "tweakToolStripMenuItem";
+            this.tweakToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.tweakToolStripMenuItem.Text = "操作";
+            // 
+            // clearQuestInfoToolStripMenuItem
+            // 
+            this.clearQuestInfoToolStripMenuItem.Name = "clearQuestInfoToolStripMenuItem";
+            this.clearQuestInfoToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.clearQuestInfoToolStripMenuItem.Text = "任務情報を消去";
+            this.clearQuestInfoToolStripMenuItem.Click += new System.EventHandler(this.clearQuestInfoToolStripMenuItem_Click);
             // 
             // reloadBrowserToolStripMenuItem
             // 
@@ -504,7 +514,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1014, 504);
+            this.ClientSize = new System.Drawing.Size(1014, 503);
             this.Controls.Add(this.materialList);
             this.Controls.Add(this.deckMemberList);
             this.Controls.Add(this.missionList);
@@ -535,7 +545,6 @@
         #endregion
 
         private KCB.WebBrowserEx webBrowser1;
-        private System.Windows.Forms.Timer timerWaitPageLoad;
         private System.Windows.Forms.Panel panelWebBrowserContainer;
         private MissionList missionList;
         private DeckMemberList deckMemberList;
@@ -581,6 +590,8 @@
         private System.Windows.Forms.ToolStripMenuItem showJsonLogToolStripMenuItem;
         private System.Windows.Forms.Timer timerWaitForNightBattle;
         private EnemyFleetList enemyFleetList;
+        private System.Windows.Forms.ToolStripMenuItem clearQuestInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tweakToolStripMenuItem;
     }
 }
 

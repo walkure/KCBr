@@ -329,7 +329,16 @@ namespace KCB2
             }
 
             //次のリクエストに備える
-            listener.BeginGetContext(OnHTTPRequest, listener);
+            try
+            {
+                listener.BeginGetContext(OnHTTPRequest, listener);
+            }
+            catch(ObjectDisposedException ex)
+            {
+                //コネクションが閉じた
+                DebugOut("ObjectDisposedException\n{0}",  ex.ToString());
+                return;
+            }
 
             HttpListenerContext ctx = null;
             try

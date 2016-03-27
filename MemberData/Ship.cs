@@ -568,6 +568,18 @@ namespace KCB2.MemberData
                         return Info.Name;
                     }
                 }
+
+                /// <summary>
+                /// 装備レベル
+                /// </summary>
+                public int Level
+                {
+                    get
+                    {
+                        return Info.Level;
+                    }
+                }
+
                 /// <summary>
                 /// アイテム種別ID
                 /// </summary>
@@ -1149,6 +1161,21 @@ namespace KCB2.MemberData
                 //レベル146からレベル150まで
                 if (nLevel <= 150)
                     return 1000 * (nLevel - 145) * (4 * nLevel - 421) + 2465000 + 1000000;
+                //レベル151から155まで
+                if(nLevel <= 155)
+                    switch(nLevel)
+                    {
+                        case 151:
+                            return 3564000;
+                        case 152:
+                            return 3777000;
+                        case 153:
+                            return 3999000;
+                        case 154:
+                            return 4230000;
+                        case 155:
+                            return 4470000;
+                    }
 
                 throw new ArgumentOutOfRangeException("Invalid Level param:" + nLevel.ToString());
             }

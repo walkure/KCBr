@@ -184,6 +184,7 @@ namespace KCB2.MasterData
                     case 33: return "大型飛行艇";
                     case 34: return "戦闘糧食";
                     case 35: return "補給物資";
+                    case 36: return "特型内火艇";
                     default: return string.Format("未知({0})", itemType);
                 }
 
@@ -242,7 +243,8 @@ namespace KCB2.MasterData
                     case 42: return "大型探照灯";
                     case 43: return "戦闘糧食";
                     case 44: return "補給物資";
-
+                    case 45: return "多用途水上機";
+                    case 46: return "特型内火艇";
                     default: return string.Format("未知({0})", itemDetailType);
                 }
             }

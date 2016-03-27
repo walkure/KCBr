@@ -124,10 +124,13 @@ namespace KCB2
         /// <returns></returns>
         public static IDictionary<string, string> ParsePostQuery(string query)
         {
+            var ret = new Dictionary<string, string>();
+            if (string.IsNullOrEmpty(query))
+                return ret;
+
             var req = Uri.UnescapeDataString(query);
             var kv_pair = req.Split(new char[] { '&' });
 
-            var ret = new Dictionary<string, string>();
             foreach (var it in kv_pair)
             {
                 var k_v = it.Split(new char[] { '=' });

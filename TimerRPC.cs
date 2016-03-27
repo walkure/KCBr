@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace KCB2
 {
@@ -74,10 +75,46 @@ namespace KCB2
         /// </summary>
         public TimerRPCManager()
         {
+            ServerHost = Properties.Settings.Default.NotificationServer;
+        }
+
+        string _serverHost = "";
+        public string ServerHost
+        {
+            get { return _serverHost; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    SwitchToNamedPipe();
+                else
+                    SwitchToNetTcpServer(value);
+
+                _serverHost = value;
+            }
+        }
+
+        private void SwitchToNetTcpServer(string host)
+        {
+            var bind = new NetTcpBinding(SecurityMode.None);
+            bind.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
             _notifyFactory = new ChannelFactory<KCB.RPC.IUpdateNotification>(
-                    new NetNamedPipeBinding(),
+                     bind,
+                    new EndpointAddress(string.Format("net.tcp://{0}/kcb-update-channel", host))
+                    );
+            var defCred = _notifyFactory.Endpoint.Behaviors.Find<System.ServiceModel.Description.ClientCredentials>();
+            defCred.UserName.UserName = "hoge";
+            defCred.UserName.Password = "fuga";
+
+            Debug.WriteLine("Notify target:TCP:" + host);
+        }
+
+        private void SwitchToNamedPipe()
+        {
+            _notifyFactory = new ChannelFactory<KCB.RPC.IUpdateNotification>(
+                      new NetNamedPipeBinding(),
                     new EndpointAddress("net.pipe://localhost/kcb-update-channel")
                     );
+            Debug.WriteLine("Notify target:NamedPipe");
         }
 
         /// <summary>
@@ -132,35 +169,37 @@ namespace KCB2
         /// </summary>
         /// <param name="info"></param>
         /// <returns>失敗したらfalse</returns>
-        bool RPCUpdateNDock(NDockInfo info)
+        void RPCUpdateNDock(NDockInfo info)
         {
             if (info == null)
-                return false;
+                return;
             if (!ExistWCFServer)
-                return false;
+                return;
 
-            try
+            Task.Factory.StartNew(() =>
             {
-                /* RPCが失敗するとproxy objectに失敗フラグが立つようで、
-                 * 再度callすると以下の例外が飛ぶ。
-                 * なので、proxy objectは毎回生成することにした。
-                 * 
-                 * CommunicationObjectFaultedException 
-                 * 通信オブジェクト System.ServiceModel.Channels.ServiceChannel は、
-                 * 状態が Faulted であるため通信に使用できません。
-                 */
-                var notifyProxy = _notifyFactory.CreateChannel();
-                notifyProxy.UpdateNDock(info.DockNum, info.ShipName ?? "", info.FinishTime);
-                ((IClientChannel)notifyProxy).Close();
-            }
-            catch (EndpointNotFoundException exp)
-            {
-                Debug.WriteLine("UpdateNDock:EndpointNotFoundException\n"
-                    + exp.ToString());
-                return false;
-            }
+                try
+                {
+                    /* RPCが失敗するとproxy objectに失敗フラグが立つようで、
+                     * 再度callすると以下の例外が飛ぶ。
+                     * なので、proxy objectは毎回生成することにした。
+                     * 
+                     * CommunicationObjectFaultedException 
+                     * 通信オブジェクト System.ServiceModel.Channels.ServiceChannel は、
+                     * 状態が Faulted であるため通信に使用できません。
+                     */
+                    var notifyProxy = _notifyFactory.CreateChannel();
+                    notifyProxy.UpdateNDock(info.DockNum, info.ShipName ?? "", info.FinishTime);
+                    ((IClientChannel)notifyProxy).Close();
+                }
+                catch (EndpointNotFoundException exp)
+                {
+                    Debug.WriteLine("UpdateNDock:EndpointNotFoundException\n"
+                        + exp.ToString());
+                }
+            });
 
-            return true;
+            return;
         }
 
         /// <summary>
@@ -168,29 +207,30 @@ namespace KCB2
         /// </summary>
         /// <param name="info"></param>
         /// <returns>失敗したらfalse</returns>
-        bool RPCUpdateMission(MissionInfo info)
+        void RPCUpdateMission(MissionInfo info)
         {
             if (info == null)
-                return false;
+                return;
             if (!ExistWCFServer)
-                return false;
+                return;
 
-            try
-            {
-                //上に同じ
-                var notifyProxy = _notifyFactory.CreateChannel();
-                notifyProxy.UpdateMission(info.FleetNum, info.FleetName ?? "",
-                    info.MissionName ?? "", info.FinishTime);
-                ((IClientChannel)notifyProxy).Close();
-            }
-            catch (EndpointNotFoundException exp)
-            {
-                Debug.WriteLine("UpdateMission:EndpointNotFoundException\n"
-                    + exp.ToString());
-                return false;
-            }
+            Task.Factory.StartNew(() =>
+           {
+               try
+               {
+                    //上に同じ
+                    var notifyProxy = _notifyFactory.CreateChannel();
+                   notifyProxy.UpdateMission(info.FleetNum, info.FleetName ?? "",
+                       info.MissionName ?? "", info.FinishTime);
+                   ((IClientChannel)notifyProxy).Close();
+               }
+               catch (EndpointNotFoundException exp)
+               {
+                   Debug.WriteLine("UpdateMission:EndpointNotFoundException\n"
+                       + exp.ToString());
+               }
+           });
 
-            return true;
         }
 
         /// <summary>
@@ -198,33 +238,34 @@ namespace KCB2
         /// </summary>
         /// <param name="basicInfo"></param>
         /// <returns></returns>
-        public bool UpdateParameters(KCB2.MemberData.Basic basicInfo)
+        public void UpdateParameters(KCB2.MemberData.Basic basicInfo)
         {
             _deckCount = basicInfo.Deck;
             _ndockCount = basicInfo.NDock;
             _memberID = basicInfo.MemberID;
-            return RPCUpdateParameters(_memberID,_ndockCount, _deckCount);
+            RPCUpdateParameters(_memberID,_ndockCount, _deckCount);
         }
 
-        bool RPCUpdateParameters(string memberID,int nDockCount,int deckCount)
+        void RPCUpdateParameters(string memberID,int nDockCount,int deckCount)
         {
             if (!ExistWCFServer)
-                return false;
+                return;
 
-            try
-            {
-                //上に同じ
-                var notifyProxy = _notifyFactory.CreateChannel();
-                notifyProxy.UpdateParameters(memberID,nDockCount, deckCount);
-                ((IClientChannel)notifyProxy).Close();
-            }
-            catch (EndpointNotFoundException exp)
-            {
-                Debug.WriteLine("UpdateParametersn:EndpointNotFoundException\n"
-                    + exp.ToString());
-                return false;
-            }
-            return true;
+            Task.Factory.StartNew(() =>
+           {
+               try
+               {
+                    //上に同じ
+                    var notifyProxy = _notifyFactory.CreateChannel();
+                   notifyProxy.UpdateParameters(memberID, nDockCount, deckCount);
+                   ((IClientChannel)notifyProxy).Close();
+               }
+               catch (EndpointNotFoundException exp)
+               {
+                   Debug.WriteLine("UpdateParametersn:EndpointNotFoundException\n"
+                       + exp.ToString());
+               }
+           });
         }
 
 
@@ -232,41 +273,42 @@ namespace KCB2
         string _condTimerFleetName = "";
         DateTime _condTimerFinishTime = DateTime.MinValue;
 
-        public bool UpdateConditionTimer(DeckMemberList.DeckStatus deckStatus)
+        public void UpdateConditionTimer(DeckMemberList.DeckStatus deckStatus)
         {
             if (_condTimerFleetNo == deckStatus.FleetNo && _condTimerFleetName == deckStatus.FleetName
                  && _condTimerFinishTime == deckStatus.RecoverTime)
-                return true;
+                return;
 
             _condTimerFleetNo = deckStatus.FleetNo;
             _condTimerFleetName = deckStatus.FleetName;
             _condTimerFinishTime = deckStatus.RecoverTime;
 
 
-            return RPCUpdateConditionTimer(deckStatus.FleetNo, deckStatus.FleetName,
+            RPCUpdateConditionTimer(deckStatus.FleetNo, deckStatus.FleetName,
                 deckStatus.RecoverTime);
         }
 
-        bool RPCUpdateConditionTimer(int fleetNum, string fleetName,  DateTime finishTime)
+        void RPCUpdateConditionTimer(int fleetNum, string fleetName,  DateTime finishTime)
         {
 
             if (!ExistWCFServer)
-                return false;
+                return;
 
-            try
-            {
-                //上に同じ
-                var notifyProxy = _notifyFactory.CreateChannel();
-                notifyProxy.UpdateConditionTimer(fleetNum,fleetName,finishTime);
-                ((IClientChannel)notifyProxy).Close();
-            }
-            catch (EndpointNotFoundException exp)
-            {
-                Debug.WriteLine("UpdateConditionTimern:EndpointNotFoundException\n"
-                    + exp.ToString());
-                return false;
-            }
-            return true;
+            Task.Factory.StartNew(() =>
+           {
+               try
+               {
+                    //上に同じ
+                    var notifyProxy = _notifyFactory.CreateChannel();
+                   notifyProxy.UpdateConditionTimer(fleetNum, fleetName, finishTime);
+                   ((IClientChannel)notifyProxy).Close();
+               }
+               catch (EndpointNotFoundException exp)
+               {
+                   Debug.WriteLine("UpdateConditionTimern:EndpointNotFoundException\n"
+                       + exp.ToString());
+               }
+           });
         }
 
         #region Mutex操作関数
@@ -289,29 +331,37 @@ namespace KCB2
         /// 自力でP/Invokeする
         /// </summary>
         /// <returns>存在してたらtrue</returns>
-        public static bool ExistWCFServer
+        public bool ExistWCFServer
         {
             get
             {
-                IntPtr hMutex;
-                if ((hMutex = OpenMutex(SYNCHRONIZE, false, mutexName)) != IntPtr.Zero)
+                if (string.IsNullOrEmpty(_serverHost))
                 {
-                    //mutexが開けた
-                    Debug.WriteLine("WCFサーバの存在を確認しました。");
-                    CloseHandle(hMutex);
-                    return true;
-                }
+                    IntPtr hMutex;
+                    if ((hMutex = OpenMutex(SYNCHRONIZE, false, mutexName)) != IntPtr.Zero)
+                    {
+                        //mutexが開けた
+                        Debug.WriteLine("WCFサーバの存在を確認しました。");
+                        CloseHandle(hMutex);
+                        return true;
+                    }
 
-                if (Marshal.GetLastWin32Error() == ERROR_FILE_NOT_FOUND)
-                {
-                    //mutexが存在しない
-                    Debug.WriteLine("WCFサーバは存在しません。");
+                    if (Marshal.GetLastWin32Error() == ERROR_FILE_NOT_FOUND)
+                    {
+                        //mutexが存在しない
+                        Debug.WriteLine("WCFサーバは存在しません。");
+                        return false;
+                    }
+
+                    Debug.WriteLine("TimerRPC.IsExistWCFServer:謎のエラー"
+                        + Marshal.GetLastWin32Error().ToString());
                     return false;
                 }
-
-                Debug.WriteLine("TimerRPC.IsExistWCFServer:謎のエラー"
-                    + Marshal.GetLastWin32Error().ToString());
-                return false;
+                else
+                {
+                    //Net.Tcpの時は存在していると仮定してパケット投げる
+                    return true;
+                }
             }
         }
 
@@ -338,72 +388,111 @@ namespace KCB2
         /// </summary>
         /// <param name="info"></param>
         /// <returns>失敗したらfalse</returns>
-        public bool ShutdownTimer()
+        public void ShutdownTimer()
         {
             if (!ExistWCFServer)
-                return false;
+                return;
 
-            try
-            {
-                /* RPCが失敗するとproxy objectに失敗フラグが立つようで、
-                 * 再度callすると以下の例外が飛ぶ。
-                 * なので、proxy objectは毎回生成することにした。
-                 * 
-                 * CommunicationObjectFaultedException 
-                 * 通信オブジェクト System.ServiceModel.Channels.ServiceChannel は、
-                 * 状態が Faulted であるため通信に使用できません。
-                 */
-                var notifyProxy = _notifyFactory.CreateChannel();
-                notifyProxy.ShutdownTimer();
+            Task.Factory.StartNew(() =>
+           {
+               try
+               {
+                    /* RPCが失敗するとproxy objectに失敗フラグが立つようで、
+                     * 再度callすると以下の例外が飛ぶ。
+                     * なので、proxy objectは毎回生成することにした。
+                     * 
+                     * CommunicationObjectFaultedException 
+                     * 通信オブジェクト System.ServiceModel.Channels.ServiceChannel は、
+                     * 状態が Faulted であるため通信に使用できません。
+                     */
+                   var notifyProxy = _notifyFactory.CreateChannel();
+                   notifyProxy.ShutdownTimer();
 
-                /*明示的に閉じようとすると
-                 *追加情報: パイプ パイプを閉じています。 (232, 0xe8) への書き込みエラーが発生しました。
-                 *とでる
-                 */
-//                ((IClientChannel)notifyProxy).Close();
-            }
-            catch (EndpointNotFoundException exp)
-            {
-                Debug.WriteLine("ShutdownTimer:EndpointNotFoundException\n"
-                    + exp.ToString());
-                return false;
-            }
+                    /*明示的に閉じようとすると
+                     *追加情報: パイプ パイプを閉じています。 (232, 0xe8) への書き込みエラーが発生しました。
+                     *とでる
+                     */
+                    //                ((IClientChannel)notifyProxy).Close();
+                }
+               catch (EndpointNotFoundException exp)
+               {
+                   Debug.WriteLine("ShutdownTimer:EndpointNotFoundException\n"
+                       + exp.ToString());
+               }
+           });
 
-            return true;
         }
 
         /// <summary>
         /// タイマの設定画面を表示させる
         /// </summary>
         /// <returns></returns>
-        public bool ShowTimerPreferenceDlg()
+        public void ShowTimerPreferenceDlg()
         {
             if (!ExistWCFServer)
-                return false;
+                return;
 
-            try
-            {
-                /* RPCが失敗するとproxy objectに失敗フラグが立つようで、
-                 * 再度callすると以下の例外が飛ぶ。
-                 * なので、proxy objectは毎回生成することにした。
-                 * 
-                 * CommunicationObjectFaultedException 
-                 * 通信オブジェクト System.ServiceModel.Channels.ServiceChannel は、
-                 * 状態が Faulted であるため通信に使用できません。
-                 */
-                var notifyProxy = _notifyFactory.CreateChannel();
-                notifyProxy.ShowPreferenceForm();
-                ((IClientChannel)notifyProxy).Close();
-            }
-            catch (EndpointNotFoundException exp)
-            {
-                Debug.WriteLine("ShowPreferenceForm:EndpointNotFoundException\n"
-                    + exp.ToString());
-                return false;
-            }
-
-            return true;
-
+            Task.Factory.StartNew(() =>
+           {
+               try
+               {
+                    /* RPCが失敗するとproxy objectに失敗フラグが立つようで、
+                     * 再度callすると以下の例外が飛ぶ。
+                     * なので、proxy objectは毎回生成することにした。
+                     * 
+                     * CommunicationObjectFaultedException 
+                     * 通信オブジェクト System.ServiceModel.Channels.ServiceChannel は、
+                     * 状態が Faulted であるため通信に使用できません。
+                     */
+                   var notifyProxy = _notifyFactory.CreateChannel();
+                   notifyProxy.ShowPreferenceForm();
+                   ((IClientChannel)notifyProxy).Close();
+               }
+               catch (EndpointNotFoundException exp)
+               {
+                   Debug.WriteLine("ShowPreferenceForm:EndpointNotFoundException\n"
+                       + exp.ToString());
+               }
+           });
         }
+
+        /// <summary>
+        /// 戦闘終了を通知する
+        /// </summary>
+        /// <returns></returns>
+        public void RPCFinishBattle(string type)
+        {
+            if (!Properties.Settings.Default.NotifyFinishBattle)
+                return;
+
+            if (!ExistWCFServer)
+                return;
+
+            Debug.WriteLine("終戦通知:" + type);
+
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    /* RPCが失敗するとproxy objectに失敗フラグが立つようで、
+                     * 再度callすると以下の例外が飛ぶ。
+                     * なので、proxy objectは毎回生成することにした。
+                     * 
+                     * CommunicationObjectFaultedException 
+                     * 通信オブジェクト System.ServiceModel.Channels.ServiceChannel は、
+                     * 状態が Faulted であるため通信に使用できません。
+                     */
+                    var notifyProxy = _notifyFactory.CreateChannel();
+                    notifyProxy.FinishBattle(type);
+                    ((IClientChannel)notifyProxy).Close();
+                }
+                catch (EndpointNotFoundException exp)
+                {
+                    Debug.WriteLine("RPCFinishBattle:EndpointNotFoundException\n"
+                        + exp.ToString());
+                }
+            });
+        }
+
     }
 }

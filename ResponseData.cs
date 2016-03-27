@@ -310,6 +310,29 @@ namespace KCB
                     public object api_slottype21 { get; set; }
                     public object api_slottype22 { get; set; }
                     public object api_slottype23 { get; set; }
+                    public object api_slottype24 { get; set; }
+                    public object api_slottype25 { get; set; }
+                    public object api_slottype26 { get; set; }
+                    public object api_slottype27 { get; set; }
+                    public object api_slottype28 { get; set; }
+                    public object api_slottype29 { get; set; }
+                    public object api_slottype30 { get; set; }
+                    public object api_slottype31 { get; set; }
+                    public object api_slottype32 { get; set; }
+                    public object api_slottype33 { get; set; }
+                    public object api_slottype34 { get; set; }
+                    public object api_slottype35 { get; set; }
+                    public object api_slottype36 { get; set; }
+                    public object api_slottype37 { get; set; }
+                    public object api_slottype38 { get; set; }
+                    public object api_slottype39 { get; set; }
+                    public object api_slottype40 { get; set; }
+                    public object api_slottype41 { get; set; }
+                    public object api_slottype42 { get; set; }
+                    public object api_slottype43 { get; set; }
+                    public object api_slottype44 { get; set; }
+                    public object api_slottype45 { get; set; }
+                    public object api_slottype46 { get; set; }
                 }
 
                 public List<ApiDataShip> api_ship_data { get; set; }
@@ -834,6 +857,21 @@ namespace KCB
             public string api_result_msg { get; set; }
             public ApiData api_data { get; set; }
         }
+
+        [Obfuscation(Exclude = true)]
+        public class ReturnInstruction
+        {
+            [Obfuscation(Exclude = true)]
+            public class ApiData
+            {
+                // 3,遠征ID,帰還時間？,0
+                public List<long> api_mission { get; set; }
+            }
+            public int api_result { get; set; }
+            public string api_result_msg { get; set; }
+            public ApiData api_data { get; set; }
+        }
+
     }
 
     namespace api_req_hokyu
@@ -1300,7 +1338,13 @@ namespace KCB
                 [JsonProperty("44")]
                 public int Type44 { get; set; }
 
-            
+                [JsonProperty("45")]
+                public int Type45 { get; set; }
+
+                [JsonProperty("46")]
+                public int Type46 { get; set; }
+
+
             }
 
             public ApiMstShip[] api_mst_ship { get; set; }
@@ -1417,6 +1461,25 @@ namespace KCB
             public class ApiData
             {
                 public int api_locked { get; set; }
+            }
+            public int api_result { get; set; }
+            public string api_result_msg { get; set; }
+            public ApiData api_data { get; set; }
+        }
+
+        [Obfuscation(Exclude = true)]
+        public class PresetSelect
+        {
+            public class ApiData
+            {
+                [Obfuscation(Exclude = true)]
+                public int api_member_id { get; set; }
+                public int api_id { get; set; }
+                public string api_name { get; set; }
+                public string api_name_id { get; set; }
+                public List<int> api_mission { get; set; }
+                public string api_flagship { get; set; }
+                public List<int> api_ship { get; set; }
             }
             public int api_result { get; set; }
             public string api_result_msg { get; set; }

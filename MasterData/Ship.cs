@@ -779,6 +779,8 @@ namespace KCB2.MasterData
                 Type42 = 46,
                 Type43 = 47,
                 Type44 = 48,
+                Type45 = 49,
+                Type46 = 50,
             }
 
             static string GetColumnText(ItemOrder it)
@@ -839,6 +841,8 @@ namespace KCB2.MasterData
                     case ItemOrder.Type42:
                     case ItemOrder.Type43:
                     case ItemOrder.Type44:
+                    case ItemOrder.Type45:
+                    case ItemOrder.Type46:
                         return Item.Param.GetItemDicType((int)it - 4);
                     default:
                         throw new IndexOutOfRangeException();
@@ -956,6 +960,8 @@ namespace KCB2.MasterData
                 SubItems[(int)ItemOrder.Type42] = new LVIntSubItem(this, json.api_equip_type.Type42);
                 SubItems[(int)ItemOrder.Type43] = new LVIntSubItem(this, json.api_equip_type.Type43);
                 SubItems[(int)ItemOrder.Type44] = new LVIntSubItem(this, json.api_equip_type.Type44);
+                SubItems[(int)ItemOrder.Type45] = new LVIntSubItem(this, json.api_equip_type.Type45);
+                SubItems[(int)ItemOrder.Type46] = new LVIntSubItem(this, json.api_equip_type.Type46);
             }
 
             public ShipTypeLVItem()

@@ -15,6 +15,7 @@ namespace KCBTimer
     public partial class Form1 : Form
     {
         ServiceHost servHost;
+        bool bTcpMode = false;
         public Form1()
         {
             InitializeComponent();
@@ -26,14 +27,42 @@ namespace KCBTimer
             lvNDock.LoadColumnWithOrder(Properties.Settings.Default.DockColumnWidth);
 
             var host = new RemoteHost(this);
-            servHost = new ServiceHost(host,new Uri[] { new Uri("net.pipe://localhost")});
-            servHost.AddServiceEndpoint(typeof(KCB.RPC.IUpdateNotification),
-                new NetNamedPipeBinding(), "kcb-update-channel");
+            servHost = new ServiceHost(host);
+            if (Properties.Settings.Default.NetTcp)
+            {
+                var bind = new NetTcpBinding(SecurityMode.None);
+                bind.Security.Message.ClientCredentialType = MessageCredentialType.UserName;
+                servHost.AddServiceEndpoint(typeof(KCB.RPC.IUpdateNotification), bind, new Uri("net.tcp://localhost/kcb-update-channel"));
+                servHost.Credentials.UserNameAuthentication.CustomUserNamePasswordValidator = new HogeFugaValidator();
+                servHost.Credentials.UserNameAuthentication.UserNamePasswordValidationMode = System.ServiceModel.Security.UserNamePasswordValidationMode.Custom;
+                Debug.WriteLine("Protocol:Net.Tcp");
+                bTcpMode = true;
+            }
+            else
+            {
+                servHost.AddServiceEndpoint(typeof(KCB.RPC.IUpdateNotification), new NetNamedPipeBinding(), new Uri("net.pipe://localhost/kcb-update-channel"));
+                Debug.WriteLine("Protocol:Net.Pipe");
+            }
             servHost.Open();
 
             //起動し終えたのでシグナル状態へ
             Program._mutex.ReleaseMutex();
 
+        }
+
+        class HogeFugaValidator : System.IdentityModel.Selectors.UserNamePasswordValidator
+        {
+            public override void Validate(string userName, string password)
+            {
+                if (null == userName || null == password)
+                {
+                    throw new ArgumentNullException();
+                }
+                if (!(userName == "hoge" && password == "fuga"))
+                {
+                    throw new System.IdentityModel.Tokens.SecurityTokenException("Unknown Username or Password");
+                }
+            }
         }
 
         public void UpdateMessage(string format,params object[] args)
@@ -113,13 +142,13 @@ namespace KCBTimer
             {
                 dtCondRecoverTime = finishTime;
                 condRecoverTimerMsg = string.Format("まもなく第{0}艦隊({1})のコンディションが回復します",fleetNum,fleetName);
-                Text = string.Format("タイマ [回復通知:({0}){1} {2}]", fleetNum, fleetName, finishTime.ToString());
+                Text = string.Format("遠征・修理ドック情報 [回復通知:({0}){1} {2}]", fleetNum, fleetName, finishTime.ToString());
                 return;
             }
 
             dtCondRecoverTime = DateTime.MaxValue;
             condRecoverTimerMsg = "";
-            Text = "タイマ";
+            Text = "遠征・修理ドック情報";
 
         }
 
@@ -144,7 +173,7 @@ namespace KCBTimer
                 TimerHandlerListViewItem.PlaySound(Properties.Settings.Default.CondSound);
                 dtCondRecoverTime = DateTime.MaxValue;
                 condRecoverTimerMsg = "";
-                Text = "タイマ";
+                Text = "遠征・修理ドック情報";
             }
 
         }
@@ -202,6 +231,7 @@ namespace KCBTimer
             }
 
             confDlg = new Form2();
+            confDlg.TcpMode = bTcpMode;
             confDlg.FormClosed += (FormClosedEventHandler)
                 ((Object sender, FormClosedEventArgs e) => { confDlg = null; });
             confDlg.Show();

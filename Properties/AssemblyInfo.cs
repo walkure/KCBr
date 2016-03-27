@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KCB2")]
-[assembly: AssemblyCopyright("Copyright ©  2013-2015 http://www.3pf.jp/")]
+[assembly: AssemblyCopyright("Copyright ©  2013-2016 http://www.3pf.jp/")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.7.6.0")]
+[assembly: AssemblyFileVersion("2.7.7.0")]

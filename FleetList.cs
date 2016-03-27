@@ -384,7 +384,12 @@ namespace KCB2
                                     value = string.Format("装備ID:{0}", slotItem.ID);
                             }
                             else
-                                value = string.Format("({0}){1}", slotItem.TypeName, slotItem.Name);
+                            {
+                                if (slotItem.Level > 0)
+                                    value = string.Format("({0})[{1}]{2}", slotItem.TypeName,slotItem.Level, slotItem.Name);
+                                else
+                                    value = string.Format("({0}){1}", slotItem.TypeName, slotItem.Name);
+                            }
 
                             sb.AppendFormat("{0}: {1}\n", name, value);
                         }

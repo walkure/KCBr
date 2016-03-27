@@ -12,6 +12,7 @@ namespace KCB2.BattleResult
     {
 
         Result _battleResult = null;
+        bool _practice = false;
 
         /// <summary>
         /// 戦闘に要する概算秒数
@@ -30,10 +31,11 @@ namespace KCB2.BattleResult
         /// 戦闘開始
         /// </summary>
         /// <param name="JSON"></param>
+        /// <param name="practice">演習の時true</param>
         /// <param name="_memberShip"></param>
         /// <param name="_memberDeck"></param>
         /// <param name="_masterShip"></param>
-        public int ProcessBattle(string JSON, MemberData.Ship _memberShip,
+        public int ProcessBattle(string JSON,bool practice, MemberData.Ship _memberShip,
             MemberData.Deck _memberDeck, MasterData.Ship _masterShip,MasterData.Item _masterItem)
         {
             var json = JsonConvert.DeserializeObject<KCB.api_req_sortie.Battle>(JSON);
@@ -41,6 +43,7 @@ namespace KCB2.BattleResult
                 return 0;
             if (json.api_result != 1)
                 return 0;
+            _practice = practice;
 
             var result = json.api_data;
             var deck_info = _memberDeck.GetFleet(result.api_dock_id);
@@ -210,7 +213,7 @@ namespace KCB2.BattleResult
             MemberData.Deck.Fleet fleetInfo, MemberData.Ship _memberShip, MasterData.Ship _masterShip)
         {
             Debug.WriteLine("戦闘開始/艦隊番号：" + fleetInfo.Num.ToString());
-            _battleResult = new Result(result.api_midnight_flag == 1);
+            _battleResult = new Result(result.api_midnight_flag == 1,_practice);
 
             //戦闘形態を取得する
 
@@ -259,7 +262,11 @@ namespace KCB2.BattleResult
 
                 var ship = _masterShip.LookupShipMaster(ship_id);
                 var info = _battleResult.Enemy.Ships[i];
-                var shipName = string.Format("{0}{1}",ship.Name,ship.Yomi);
+                string shipName;
+                if(_practice)
+                    shipName = ship.Name;
+                else
+                    shipName = string.Format("{0}{1}", ship.Name, ship.Yomi);
 
 
                 info.Initialize(-1,ship_id,shipName,ship.ShipTypeId,
@@ -363,8 +370,6 @@ namespace KCB2.BattleResult
             }
             return battleTime;
         }
-
-
     }
 
     /// <summary>
@@ -905,12 +910,17 @@ namespace KCB2.BattleResult
         }
 
 
+        /// <summary>
+        /// 演習の時true
+        /// </summary>
+        public bool Practice { get; private set; }
 
-        public Result(bool bHasNightBattle)
+        public Result(bool bHasNightBattle,bool practice)
         {
             Friend = new FleetState();
             Enemy = new FleetState();
             HasNightBattle = bHasNightBattle;
+            Practice = practice;
         }
 
         public Result(Result orig)
@@ -919,6 +929,7 @@ namespace KCB2.BattleResult
             HasNightBattle = orig.HasNightBattle;
             Friend = new FleetState(orig.Friend);
             Enemy = new FleetState(orig.Enemy);
+            Practice = orig.Practice;
         }
 
         public override string ToString()

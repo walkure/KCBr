@@ -11,7 +11,7 @@ namespace KCB2
 {
     public partial class FormVolume : Form
     {
-        MixerAPI _mixer;
+        MixerAPI _mixer = null;
 
         public FormVolume()
         {
@@ -63,7 +63,12 @@ namespace KCB2
 
         private void FormVolume_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _mixer.Dispose();
+            //ミキサーが開けなかった時はnullで飛んでくる
+            if (_mixer != null)
+            {
+                _mixer.Dispose();
+                _mixer = null;
+            }
         }
 
 

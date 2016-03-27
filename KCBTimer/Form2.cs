@@ -17,12 +17,14 @@ namespace KCBTimer
             InitializeComponent();
         }
 
+        public bool TcpMode;
+
         private void Form2_Load(object sender, EventArgs e)
         {
             tbDockSound.Text = Properties.Settings.Default.DockOutSound;
             tbMissionSound.Text = Properties.Settings.Default.MissionFinishSound;
             tbCondSound.Text = Properties.Settings.Default.CondSound;
-
+            cbUseNetTcp.Checked = Properties.Settings.Default.NetTcp;
 
             var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(
                System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -30,6 +32,13 @@ namespace KCBTimer
             labelRevision.Text = ver.ProductVersion;
             labelDescription.Text = ver.Comments;
             labelCopyright.Text = ver.LegalCopyright;
+
+            if (TcpMode)
+                labelModeText.Text = "(TCPモードで動作中)";
+            else
+                labelModeText.Text = "";
+
+            tbNotifySound.Text = Properties.Settings.Default.NotifySound;
 
         }
 
@@ -79,12 +88,30 @@ namespace KCBTimer
             soundPlay(tbCondSound.Text);
         }
 
+        private void btNotify_Click(object sender, EventArgs e)
+        {
+            var ofd = new OpenFileDialog();
+            ofd.Filter = "WAVE File(*.wav)|*.wav|All Files(*.*)|*.*";
+            ofd.Title = "戦闘終了通知用WAVファイルを選んでください";
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+            tbNotifySound.Text = ofd.FileName;
+
+        }
+
+        private void btTestNotify_Click(object sender, EventArgs e)
+        {
+            soundPlay(tbNotifySound.Text);
+        }
+
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.DockOutSound = tbDockSound.Text;
             Properties.Settings.Default.MissionFinishSound = tbMissionSound.Text;
             Properties.Settings.Default.CondSound = tbCondSound.Text;
+            Properties.Settings.Default.NetTcp = cbUseNetTcp.Checked;
+            Properties.Settings.Default.NotifySound = tbNotifySound.Text;
 
             DialogResult = DialogResult.OK;
             Close();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq;
 
 namespace KCB2.MemberData
 {
@@ -13,6 +14,7 @@ namespace KCB2.MemberData
     /// /kcsapi/api_req_member/updatedeckname
     /// /kcsapi/api_req_hensei/change
     /// /kcsapi/api_get_member/deck
+    /// /kcsapi/api_req_hensei/preset_select
     /// </summary>
     public class Deck
     {
@@ -40,7 +42,7 @@ namespace KCB2.MemberData
         public bool UpdateDeck(string JSON, MasterData.Mission masterMission)
         {
             var json = JsonConvert.DeserializeObject<KCB.api_get_member.Deck>(JSON);
-            if ((int)json.api_result != 1)
+            if (json.api_result != 1)
                 return false;
 
             return UpdateDeck(json.api_data, masterMission);
@@ -189,12 +191,10 @@ namespace KCB2.MemberData
                     else
                     {
                         //新規参入
-                        _deckMember[ship_id] = new ShipDeckData(_deck[deck_id - 1].Name, deck_id,
-                            _deck[deck_id - 1].MissionNum, ship_index + 1, masterMission);
 
+                        //すでにある場所へ挿入する場合
                         if (_deck[deck_id - 1].Member.Count > ship_index)
                         {
-                            //すでにある場所へ挿入する場合
                             int currentShipId = _deck[deck_id - 1].Member[ship_index];
                             _deck[deck_id - 1].Member[ship_index] = ship_id;
 
@@ -265,11 +265,7 @@ namespace KCB2.MemberData
             //艦隊リスト更新
             lock (_deck)
             {
-                foreach (var deck in _deck)
-                {
-                    if (deck.Num == deck_id)
-                        deck.Name = deck_name;
-                }
+                _deck.First(it => it.Num == deck_id).Name = deck_name;
             }
 
 
@@ -302,14 +298,7 @@ namespace KCB2.MemberData
             Fleet retVal = null;
             lock (_deck)
             {
-                foreach (var it in _deck)
-                {
-                    if (it.Num == fleetNum)
-                    {
-                        retVal = it;
-                        break;
-                    }
-                }
+               retVal = _deck.First(it => it.Num == fleetNum);
             }
 
             return retVal;
@@ -327,6 +316,74 @@ namespace KCB2.MemberData
              */
 
             //TODO 遠征開始したのでUIを更新する
+
+        }
+
+        /// <summary>
+        /// 任務を中断した
+        /// </summary>
+        /// <param name="req">リクエストパラメタ</param>
+        /// <param name="responseJson">レスポンス情報</param>
+        public void AbortMission(IDictionary<string, string> req,string responseJson)
+        {
+            KCB.api_req_mission.ReturnInstruction json = 
+                JsonConvert.DeserializeObject<KCB.api_req_mission.ReturnInstruction>(responseJson);
+
+            if (json.api_result != 1)
+                return;
+
+            int fleetNum = int.Parse(req["api_deck_id"]);
+
+            /*
+                req["api_deck_id"] に該当の艦隊番号(1-4)
+                api_mission{3,遠征番号,帰ってくる時間,0}
+            
+            */
+
+            lock (_deck)
+            {
+                var param = _deck.First(it => it.Num == fleetNum);
+                param.UpdateFinishTime(json.api_data.api_mission[2]);
+            }
+
+        }
+
+        /// <summary>
+        /// プリセット編成を読み込む
+        /// /kcsapi/api_req_hensei/preset_select
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="responseJson"></param>
+        public void LoadPresetDeck(IDictionary<string, string> req,string responseJson,MasterData.Mission masterMission)
+        {
+            KCB.api_req_hensei.PresetSelect json = JsonConvert.DeserializeObject<KCB.api_req_hensei.PresetSelect>(responseJson);
+
+            if (json.api_result != 1)
+                return;
+
+            int deck_id = int.Parse(req["api_deck_id"]);
+            int preset_no = int.Parse(req["api_preset_no"]);
+
+            lock(_deck)
+            {
+                var target = _deck[deck_id - 1];
+
+                target.Member.Clear();
+                target.Name = json.api_data.api_name;
+                if(deck_id == 1)
+                {
+                    Secretary = json.api_data.api_ship[0];
+                }
+
+                foreach(var it in json.api_data.api_ship)
+                {
+                    if(it > 0)
+                        target.Member.Add(it);
+                }
+            }
+
+            UpdateShipDeckDataList(masterMission);
+
 
         }
 
@@ -430,6 +487,11 @@ namespace KCB2.MemberData
             public int CompareTo(Fleet it)
             {
                 return Num - it.Num;
+            }
+
+            public void UpdateFinishTime(long finishTime)
+            {
+                MissionFinish = _epoch.AddMilliseconds(finishTime).ToLocalTime();
             }
         }
 

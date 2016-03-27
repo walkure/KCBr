@@ -302,7 +302,7 @@ namespace KCB2
                 else
                     UpdateDetailStatus("評価{0}で戦闘を終了しました", binfo.Rank);
             }
-
+            _parent.NotifyFinishBattle("戦闘");
         }
 
         void UpdateDeckName(IDictionary<string, string> queryParam)
@@ -410,7 +410,8 @@ namespace KCB2
             result = json.api_data.api_win_rank;
 
             UpdateDetailStatus("評価{0}で演習を終了しました", result);
-
+            _parent.EndWaitForNightBattle();
+            _parent.NotifyFinishBattle("演習");
         }
 
         void GetNewShip(string responseJson)
@@ -599,6 +600,25 @@ namespace KCB2
 
             _memberDock.UseBurner(kdock_id_s);
             _parent.UpdateBuildDock(_memberDock);
+        }
+
+        /// <summary>
+        /// 設定済み編成の読み込み
+        /// </summary>
+        /// <param name="queryParam"></param>
+        /// <param name="responseJson"></param>
+        void LoadPresetDeck(IDictionary<string, string> queryParam,string responseJson)
+        {
+
+            _memberDeck.LoadPresetDeck(queryParam, responseJson,_masterMission);
+
+            _memberShip.UpdateDeckInfo(_memberDeck);
+
+            _parent.UpdateDeckMemberList(_memberShip, _memberDeck.DeckList);
+            _parent.UpdateShipList(_memberShip.ShipList);
+
+
+            UpdateDetailStatus("スロット{1}の編成記録を第{0}艦隊へ展開させました", queryParam["api_deck_id"], queryParam["api_preset_no"]);
         }
     }
 }

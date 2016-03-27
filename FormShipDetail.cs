@@ -161,13 +161,15 @@ namespace KCB2
                     {
                         //艦載機の場合
                         if (_info.SlotItem[n].Count > 0)
+                        {
                             name = string.Format("装備{0} x{1}", n + 1, _info.SlotItem[n].Count);
-
+                        }
+                        
                         lvItems.Add(new SlotItemLVItem(name,_info.SlotItem[n],_imgSlotItem));
 
                     }
                     else
-                    {
+                    {   
                         lvItems.Add(new ListViewItem(new string[] { name, "(装備不可)" }));
                     }
                 }
@@ -280,7 +282,11 @@ namespace KCB2
                         }
                         else
                         {
-                            Text = slotItem.Name;
+                            if(slotItem.Level > 0)
+                                Text = string.Format("[{1}]{0}", slotItem.Name  ,slotItem.Level);
+                            else
+                                Text = slotItem.Name;
+
                             slotItemIndex = slotItem.TypeNum;
                             if (slotItemIndex < 0)
                                 slotItemIndex = 0;
@@ -310,7 +316,7 @@ namespace KCB2
                                 iconImageList.Draw(g, new Point(1, 0), itemIndex);
                             else
                                 iconImageList.Draw(g, new Point(1, 0), 0);
-
+                            
                         }
                     }
 
@@ -393,7 +399,6 @@ namespace KCB2
                         回避 += item.砲撃回避;
                         索敵 += item.索敵;
                         対潜 += item.対潜;
-
                     }
                 }
             }
