@@ -576,6 +576,8 @@ namespace KCB2.MemberData
                 {
                     get
                     {
+                        if (Info == null)
+                            return 0;
                         return Info.Level;
                     }
                 }

@@ -1,6 +1,6 @@
 charset:utf-8 CRLF
 
-KCBr2 (KanColle BRowser v2) 適当なトリセツ  by http://www.3pf.jp/ 2016 Mar.
+KCBr2 (KanColle BRowser v2) 適当なトリセツ  by http://www.3pf.jp/ 2016 Apr.
 
 ■やってること
 IWebBrowser2(要はInternet Explorer)に艦これFlashを表示させて、通信をHttpListenerで覗いて流れてるJSONを適当にデコード
@@ -587,3 +587,5 @@ http://www.3pf.jp/profile を参照
  ・任務情報キャッシュをクリアできるようにしました
  ・12/8メンテで上限Lvが155まで増えたのに対応
 
+2016/04/01 2.7.7.1
+ ・装備スロットに空きがある艦娘の詳細を表示すると落ちるバグを潰した

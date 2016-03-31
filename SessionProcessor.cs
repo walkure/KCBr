@@ -455,6 +455,10 @@ namespace KCB2
 
                 case "/kcsapi/api_req_map/select_eventmap_rank":
 
+                case "/kcsapi/api_req_combined_battle/goback_port":
+
+                case "/kcsapi/api_dmm_payment/paycheck":
+
                     break;
 
                 default:
