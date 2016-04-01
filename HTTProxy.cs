@@ -333,10 +333,16 @@ namespace KCB2
             {
                 listener.BeginGetContext(OnHTTPRequest, listener);
             }
-            catch(ObjectDisposedException ex)
+            catch (ObjectDisposedException ex)
             {
                 //コネクションが閉じた
-                DebugOut("ObjectDisposedException\n{0}",  ex.ToString());
+                DebugOut("ObjectDisposedException\n{0}", ex.ToString());
+                return;
+            }
+            catch (HttpListenerException ex)
+            {
+                //コネクションが閉じた
+                DebugOut("HttpListenerException\n{0}", ex.ToString());
                 return;
             }
 

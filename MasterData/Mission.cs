@@ -14,7 +14,7 @@ namespace KCB2.MasterData
     public class Mission
     {
         ConcurrentDictionary<int, Item> _missionList = new ConcurrentDictionary<int, Item>();
-        public bool UpdateMission(KCB.api_start2.ApiData.ApiMstMission[] missions)
+        public bool UpdateMission(List<KCB.api_start2.ApiData.ApiMstMission> missions)
         {
             foreach (var data in missions)
             {

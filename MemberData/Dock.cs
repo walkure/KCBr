@@ -201,7 +201,6 @@ namespace KCB2.MemberData
         /// <returns></returns>
         public bool UpdateBuildKDock(string JSON, MasterData.Ship shipMaster)
         {
-            //                var json = DynamicJson.Parse(JSON);
             var json = JsonConvert.DeserializeObject<KCB.api_get_member.KDock>(JSON);
             if ((int)json.api_result != 1)
                 return false;

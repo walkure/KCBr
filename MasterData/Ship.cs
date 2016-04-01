@@ -23,7 +23,7 @@ namespace KCB2.MasterData
         /// </summary>
         /// <param name="JSON"></param>
         /// <returns></returns>
-        public bool LoadShipMaster(KCB.api_start2.ApiData.ApiMstShip[] api_mst_ship, Item itemMaster)
+        public bool LoadShipMaster(List<KCB.api_start2.ApiData.ApiMstShip> api_mst_ship, Item itemMaster)
         {
             _shipMaster.Clear();
             if (_bUseMasterData)
@@ -82,7 +82,7 @@ namespace KCB2.MasterData
         /// </summary>
         /// <param name="JSON"></param>
         /// <returns></returns>
-        public bool LoadShipType(KCB.api_start2.ApiData.ApiMstStype[] api_mst_stype)
+        public bool LoadShipType(List<KCB.api_start2.ApiData.ApiMstStype> api_mst_stype)
         {
             _shipType.Clear();
             if (_bUseMasterData)
@@ -470,7 +470,7 @@ namespace KCB2.MasterData
 
             class LVNowMaxSubItem : System.Windows.Forms.ListViewItem.ListViewSubItem, IComparable
             {
-                public LVNowMaxSubItem(System.Windows.Forms.ListViewItem lvitOwner, int[] values)
+                public LVNowMaxSubItem(System.Windows.Forms.ListViewItem lvitOwner, List<int> values)
                     : base(lvitOwner, "")
                 {
                     if (values != null)
@@ -499,7 +499,7 @@ namespace KCB2.MasterData
 
             class LVParamArraySubItem : System.Windows.Forms.ListViewItem.ListViewSubItem, IComparable
             {
-                public LVParamArraySubItem(System.Windows.Forms.ListViewItem lvitOwner, int[] values)
+                public LVParamArraySubItem(System.Windows.Forms.ListViewItem lvitOwner, List<int> values)
                     : base(lvitOwner, "")
                 {
                     Value = 0;

@@ -19,7 +19,7 @@ namespace KCB2.MasterData
         /// </summary>
         /// <param name="JSON"></param>
         /// <returns></returns>
-        public bool LoadItemMaster(KCB.api_start2.ApiData.ApiMstSlotitem[] api_mst_slotitem)
+        public bool LoadItemMaster(List<KCB.api_start2.ApiData.ApiMstSlotitem> api_mst_slotitem)
         {
             _itemMaster.Clear();
             if (_bUseMasterData)
@@ -612,7 +612,7 @@ namespace KCB2.MasterData
 
             class LVParamArraySubItem : System.Windows.Forms.ListViewItem.ListViewSubItem, IComparable
             {
-                public LVParamArraySubItem(System.Windows.Forms.ListViewItem lvitOwner, int[] values)
+                public LVParamArraySubItem(System.Windows.Forms.ListViewItem lvitOwner, List<int> values)
                     : base(lvitOwner, "")
                 {
                     List<string> data = new List<string>();
@@ -638,7 +638,7 @@ namespace KCB2.MasterData
 
             class LVSlotItemTypeSubItem : System.Windows.Forms.ListViewItem.ListViewSubItem, IComparable
             {
-                public LVSlotItemTypeSubItem(System.Windows.Forms.ListViewItem lvitOwner, int[] values)
+                public LVSlotItemTypeSubItem(System.Windows.Forms.ListViewItem lvitOwner, List<int> values)
                     : base(lvitOwner, "")
                 {
                     Text = string.Format("{0},{1},{2}({4}),{3}({5})",

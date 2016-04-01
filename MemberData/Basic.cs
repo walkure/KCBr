@@ -117,23 +117,32 @@ namespace KCB2.MemberData
 
         public bool UpdatePort(KCB.api_port.Port.ApiData.ApiBasic data)
         {
+            _initialiized = true;
+
             MemberID = data.api_member_id;
             Nick = data.api_nickname;
-            Level = (int)data.api_level;
-            Rank = (int)data.api_rank;
-            Experience = (int)data.api_experience;
-            MaxShip = (int)data.api_max_chara;
-            MaxItem = (int)data.api_max_slotitem;
-            Deck = (int)data.api_count_deck;
-            KDock = (int)data.api_count_kdock;
-            NDock = (int)data.api_count_ndock;
-            FurnitureCoin = (int)data.api_fcoin;
+            Level = data.api_level;
+            Rank = data.api_rank;
+            Experience = data.api_experience;
+            MaxShip = data.api_max_chara;
+            MaxItem = data.api_max_slotitem;
+            Deck = data.api_count_deck;
+            KDock = data.api_count_kdock;
+            NDock = data.api_count_ndock;
+            FurnitureCoin = data.api_fcoin;
 
             Debug.WriteLine(string.Format(
                 "BASIC(2) MemberID:{0} Nick:{1} Lv:{2} Rank:{3} Exp;{4} ShipMax:{5} ItemMax:{6} Deck:{7} KDock:{8} NDock:{9} FCoin:{10}",
                 MemberID, Nick, Level, Rank, Experience, MaxShip, MaxItem, Deck, KDock, NDock, FurnitureCoin));
 
             return true;
+        }
+
+        public void UpdateRequireInfo(KCB.api_get_member.RequireInfo.ApiData.ApiBasic data)
+        {
+            MemberID = data.api_member_id.ToString();
+
+            Debug.WriteLine("BASIC(3) MemberID:" + MemberID);
         }
 
     }

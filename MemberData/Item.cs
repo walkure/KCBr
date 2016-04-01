@@ -29,9 +29,20 @@ namespace KCB2.MemberData
             if ((int)json.api_result != 1)
                 return false;
 
+            return UpdateItem(json.api_data,itemMaster);
+        }
+
+        /// <summary>
+        /// アイテム一覧の更新 /kcsapi/api_get_member/require_info
+        /// </summary>
+        /// <param name="api_data"></param>
+        /// <param name="itemMaster"></param>
+        /// <returns></returns>
+        public bool UpdateItem(List<KCB.api_get_member.Slot_Item.ApiData> api_data, MasterData.Item itemMaster)
+        {
             _itemDic.Clear();
 
-            foreach (var data in json.api_data)
+            foreach (var data in api_data)
             {
                 var item = new Info(data, itemMaster);
                 _itemDic[data.api_id] = item;
@@ -362,8 +373,10 @@ namespace KCB2.MemberData
                 SlotItemType = data.api_slotitem_id;
                 Locked = data.api_locked == 1;
 
-                if (data.api_alv > 0)
-                    Level = data.api_alv;
+                if (data.api_alv == null)
+                    Level = data.api_level;
+                else if (data.api_alv > 0)
+                    Level = (int) data.api_alv;
                 else
                     Level = data.api_level;
 

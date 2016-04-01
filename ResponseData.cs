@@ -139,7 +139,6 @@ namespace KCB
             /// </summary>
             public int api_ship_id { get; set; }
             public int api_lv { get; set; }
-//            public int api_exp { get; set; }
             public List<int> api_exp { get; set; }
             public int api_nowhp { get; set; }
             public int api_maxhp { get; set; }
@@ -211,7 +210,7 @@ namespace KCB
             [Obfuscation(Exclude = true)]
             public class ApiData
             {
-                public int api_member_id { get; set; }
+//                public int api_member_id { get; set; }
                 public int api_id { get; set; }
                 public int api_state { get; set; }
                 public int api_created_ship_id { get; set; }
@@ -354,11 +353,11 @@ namespace KCB
                 public int api_slotitem_id { get; set; }
                 public int api_locked { get; set; }
                 public int api_level { get; set; }
-                public int api_alv { get; set; }
+                public int? api_alv { get; set; }
             }
             public int api_result { get; set; }
             public string api_result_msg { get; set; }
-            public ApiData[] api_data { get; set; }
+            public List<ApiData> api_data { get; set; }
         }
 
         [Obfuscation(Exclude = true)]
@@ -374,34 +373,100 @@ namespace KCB
             public string api_result_msg { get; set; }
             public ApiData api_data { get; set; }
         }
-    }
 
-    /*
-    namespace api_req_quest
-    {
         [Obfuscation(Exclude = true)]
-        public class ClearItemGet
+        public class RequireInfo
         {
             [Obfuscation(Exclude = true)]
             public class ApiData
             {
                 [Obfuscation(Exclude = true)]
-                public class ApiBounu
+                public class ApiBasic
                 {
-                    public int api_type { get; set; }
-                    public int api_count { get; set; }
-                    public object api_item { get; set; }
+                    public int api_member_id { get; set; }
+                    public int api_firstflag { get; set; }
                 }
-                public List<int> api_material { get; set; }
-                public int api_bounus_count { get; set; }
-                public List<ApiBounu> api_bounus { get; set; }
+
+                [Obfuscation(Exclude = true)]
+                public class ApiUnsetslot
+                {
+                    public List<int> api_slottype1 { get; set; }
+                    public List<int> api_slottype2 { get; set; }
+                    public List<int> api_slottype3 { get; set; }
+                    public List<int> api_slottype4 { get; set; }
+                    public List<int> api_slottype5 { get; set; }
+                    public List<int> api_slottype6 { get; set; }
+                    public List<int> api_slottype7 { get; set; }
+                    public List<int> api_slottype8 { get; set; }
+                    public List<int> api_slottype9 { get; set; }
+                    public List<int> api_slottype10 { get; set; }
+                    public List<int> api_slottype11 { get; set; }
+                    public List<int> api_slottype12 { get; set; }
+                    public List<int> api_slottype13 { get; set; }
+                    public List<int> api_slottype14 { get; set; }
+                    public List<int> api_slottype15 { get; set; }
+                    public int api_slottype16 { get; set; }
+                    public List<int> api_slottype17 { get; set; }
+                    public List<int> api_slottype18 { get; set; }
+                    public List<int> api_slottype19 { get; set; }
+                    public int api_slottype20 { get; set; }
+                    public List<int> api_slottype21 { get; set; }
+                    public List<int> api_slottype22 { get; set; }
+                    public List<int> api_slottype23 { get; set; }
+                    public int api_slottype24 { get; set; }
+                    public List<int> api_slottype25 { get; set; }
+                    public List<int> api_slottype26 { get; set; }
+                    public List<int> api_slottype27 { get; set; }
+                    public List<int> api_slottype28 { get; set; }
+                    public List<int> api_slottype29 { get; set; }
+                    public int api_slottype30 { get; set; }
+                    public List<int> api_slottype31 { get; set; }
+                    public List<int> api_slottype32 { get; set; }
+                    public List<int> api_slottype33 { get; set; }
+                    public int api_slottype34 { get; set; }
+                    public List<int> api_slottype35 { get; set; }
+                    public List<int> api_slottype36 { get; set; }
+                    public List<int> api_slottype37 { get; set; }
+                    public int api_slottype38 { get; set; }
+                    public List<int> api_slottype39 { get; set; }
+                    public int api_slottype40 { get; set; }
+                    public int api_slottype41 { get; set; }
+                    public int api_slottype42 { get; set; }
+                    public List<int> api_slottype43 { get; set; }
+                    public List<int> api_slottype44 { get; set; }
+                    public int api_slottype45 { get; set; }
+                    public int api_slottype46 { get; set; }
+                }
+
+                [Obfuscation(Exclude = true)]
+                public class ApiUseitem
+                {
+                    public int api_id { get; set; }
+                    public int api_count { get; set; }
+                }
+
+                [Obfuscation(Exclude = true)]
+                public class ApiFurniture
+                {
+                    public int api_id { get; set; }
+                    public int api_furniture_type { get; set; }
+                    public int api_furniture_no { get; set; }
+                    public int api_furniture_id { get; set; }
+                }
+
+                public ApiBasic api_basic { get; set; }
+                public List<Slot_Item.ApiData> api_slot_item { get; set; }
+                public ApiUnsetslot api_unsetslot { get; set; }
+                public List<KDock.ApiData> api_kdock { get; set; }
+                public List<ApiUseitem> api_useitem { get; set; }
+                public List<ApiFurniture> api_furniture { get; set; }
             }
             public int api_result { get; set; }
             public string api_result_msg { get; set; }
             public ApiData api_data { get; set; }
         }
+
     }
-    */
 
     namespace api_req_sortie
     {
@@ -978,19 +1043,19 @@ namespace KCB
                 public int api_stype { get; set; }
                 public int api_afterlv { get; set; }
                 public string api_aftershipid { get; set; }
-                public int[] api_taik { get; set; }
-                public int[] api_souk { get; set; }
-                public int[] api_houg { get; set; }
-                public int[] api_raig { get; set; }
-                public int[] api_tyku { get; set; }
-                public int[] api_luck { get; set; }
+                public List<int> api_taik { get; set; }
+                public List<int> api_souk { get; set; }
+                public List<int> api_houg { get; set; }
+                public List<int> api_raig { get; set; }
+                public List<int> api_tyku { get; set; }
+                public List<int> api_luck { get; set; }
                 public int api_soku { get; set; }
                 public int api_leng { get; set; }
                 public int api_slot_num { get; set; }
-                public int[] api_maxeq { get; set; }
+                public List<int> api_maxeq { get; set; }
                 public int api_buildtime { get; set; }
-                public int[] api_broken { get; set; }
-                public int[] api_powup { get; set; }
+                public List<int> api_broken { get; set; }
+                public List<int> api_powup { get; set; }
                 public int api_backs { get; set; }
                 public string api_getmes { get; set; }
                 public int api_afterfuel { get; set; }
@@ -999,29 +1064,31 @@ namespace KCB
                 public int api_bull_max { get; set; }
                 public int api_voicef { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstShipgraph
             {
                 public int api_id { get; set; }
                 public int api_sortno { get; set; }
                 public string api_filename { get; set; }
-                public string api_version { get; set; }
-                public int[] api_boko_n { get; set; }
-                public int[] api_boko_d { get; set; }
-                public int[] api_kaisyu_n { get; set; }
-                public int[] api_kaisyu_d { get; set; }
-                public int[] api_kaizo_n { get; set; }
-                public int[] api_kaizo_d { get; set; }
-                public int[] api_map_n { get; set; }
-                public int[] api_map_d { get; set; }
-                public int[] api_ensyuf_n { get; set; }
-                public int[] api_ensyuf_d { get; set; }
-                public int[] api_ensyue_n { get; set; }
-                public int[] api_battle_n { get; set; }
-                public int[] api_battle_d { get; set; }
-                public int[] api_weda { get; set; }
-                public int[] api_wedb { get; set; }
+                public List<string> api_version { get; set; }
+                public List<int> api_boko_n { get; set; }
+                public List<int> api_boko_d { get; set; }
+                public List<int> api_kaisyu_n { get; set; }
+                public List<int> api_kaisyu_d { get; set; }
+                public List<int> api_kaizo_n { get; set; }
+                public List<int> api_kaizo_d { get; set; }
+                public List<int> api_map_n { get; set; }
+                public List<int> api_map_d { get; set; }
+                public List<int> api_ensyuf_n { get; set; }
+                public List<int> api_ensyuf_d { get; set; }
+                public List<int> api_ensyue_n { get; set; }
+                public List<int> api_battle_n { get; set; }
+                public List<int> api_battle_d { get; set; }
+                public List<int> api_weda { get; set; }
+                public List<int> api_wedb { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstSlotitemEquiptype
             {
@@ -1029,26 +1096,228 @@ namespace KCB
                 public string api_name { get; set; }
                 public int api_show_flg { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstStype
             {
+                [Obfuscation(Exclude = true)]
+                public class ApiEquipType
+                {
+                    [JsonProperty("1")]
+                    public int Type1 { get; set; }
+                    [JsonProperty("2")]
+                    public int Type2 { get; set; }
+                    [JsonProperty("3")]
+                    public int Type3 { get; set; }
+                    [JsonProperty("4")]
+                    public int Type4 { get; set; }
+                    [JsonProperty("5")]
+                    public int Type5 { get; set; }
+                    [JsonProperty("6")]
+                    public int Type6 { get; set; }
+                    [JsonProperty("7")]
+                    public int Type7 { get; set; }
+                    [JsonProperty("8")]
+                    public int Type8 { get; set; }
+                    [JsonProperty("9")]
+                    public int Type9 { get; set; }
+                    [JsonProperty("10")]
+                    public int Type10 { get; set; }
+
+                    [JsonProperty("11")]
+                    public int Type11 { get; set; }
+                    [JsonProperty("12")]
+                    public int Type12 { get; set; }
+                    [JsonProperty("13")]
+                    public int Type13 { get; set; }
+                    [JsonProperty("14")]
+                    public int Type14 { get; set; }
+                    [JsonProperty("15")]
+                    public int Type15 { get; set; }
+                    [JsonProperty("16")]
+                    public int Type16 { get; set; }
+                    [JsonProperty("17")]
+                    public int Type17 { get; set; }
+                    [JsonProperty("18")]
+                    public int Type18 { get; set; }
+                    [JsonProperty("19")]
+                    public int Type19 { get; set; }
+                    [JsonProperty("20")]
+                    public int Type20 { get; set; }
+
+                    [JsonProperty("21")]
+                    public int Type21 { get; set; }
+                    [JsonProperty("22")]
+                    public int Type22 { get; set; }
+                    [JsonProperty("23")]
+                    public int Type23 { get; set; }
+                    [JsonProperty("24")]
+                    public int Type24 { get; set; }
+                    [JsonProperty("25")]
+                    public int Type25 { get; set; }
+                    [JsonProperty("26")]
+                    public int Type26 { get; set; }
+                    [JsonProperty("27")]
+                    public int Type27 { get; set; }
+                    [JsonProperty("28")]
+                    public int Type28 { get; set; }
+                    [JsonProperty("29")]
+                    public int Type29 { get; set; }
+                    [JsonProperty("30")]
+                    public int Type30 { get; set; }
+
+                    [JsonProperty("31")]
+                    public int Type31 { get; set; }
+                    [JsonProperty("32")]
+                    public int Type32 { get; set; }
+                    [JsonProperty("33")]
+                    public int Type33 { get; set; }
+                    [JsonProperty("34")]
+                    public int Type34 { get; set; }
+                    [JsonProperty("35")]
+                    public int Type35 { get; set; }
+                    [JsonProperty("36")]
+                    public int Type36 { get; set; }
+                    [JsonProperty("37")]
+                    public int Type37 { get; set; }
+                    [JsonProperty("38")]
+                    public int Type38 { get; set; }
+                    [JsonProperty("39")]
+                    public int Type39 { get; set; }
+                    [JsonProperty("40")]
+                    public int Type40 { get; set; }
+
+                    [JsonProperty("41")]
+                    public int Type41 { get; set; }
+                    [JsonProperty("42")]
+                    public int Type42 { get; set; }
+                    [JsonProperty("43")]
+                    public int Type43 { get; set; }
+                    [JsonProperty("44")]
+                    public int Type44 { get; set; }
+                    [JsonProperty("45")]
+                    public int Type45 { get; set; }
+                    [JsonProperty("46")]
+                    public int Type46 { get; set; }
+                    [JsonProperty("47")]
+                    public int Type47 { get; set; }
+                    [JsonProperty("48")]
+                    public int Type48 { get; set; }
+                    [JsonProperty("49")]
+                    public int Type49 { get; set; }
+                    [JsonProperty("50")]
+                    public int Type50 { get; set; }
+
+                    [JsonProperty("51")]
+                    public int Type51 { get; set; }
+                    [JsonProperty("52")]
+                    public int Type52 { get; set; }
+                    [JsonProperty("53")]
+                    public int Type53 { get; set; }
+                    [JsonProperty("54")]
+                    public int Type54 { get; set; }
+                    [JsonProperty("55")]
+                    public int Type55 { get; set; }
+                    [JsonProperty("56")]
+                    public int Type56 { get; set; }
+                    [JsonProperty("57")]
+                    public int Type57 { get; set; }
+                    [JsonProperty("58")]
+                    public int Type58 { get; set; }
+                    [JsonProperty("59")]
+                    public int Type59 { get; set; }
+                    [JsonProperty("60")]
+                    public int Type60 { get; set; }
+
+                    [JsonProperty("61")]
+                    public int Type61 { get; set; }
+                    [JsonProperty("62")]
+                    public int Type62 { get; set; }
+                    [JsonProperty("63")]
+                    public int Type63 { get; set; }
+                    [JsonProperty("64")]
+                    public int Type64 { get; set; }
+                    [JsonProperty("65")]
+                    public int Type65 { get; set; }
+                    [JsonProperty("66")]
+                    public int Type66 { get; set; }
+                    [JsonProperty("67")]
+                    public int Type67 { get; set; }
+                    [JsonProperty("68")]
+                    public int Type68 { get; set; }
+                    [JsonProperty("69")]
+                    public int Type69 { get; set; }
+                    [JsonProperty("70")]
+                    public int Type70 { get; set; }
+
+                    [JsonProperty("71")]
+                    public int Type71 { get; set; }
+                    [JsonProperty("72")]
+                    public int Type72 { get; set; }
+                    [JsonProperty("73")]
+                    public int Type73 { get; set; }
+                    [JsonProperty("74")]
+                    public int Type74 { get; set; }
+                    [JsonProperty("75")]
+                    public int Type75 { get; set; }
+                    [JsonProperty("76")]
+                    public int Type76 { get; set; }
+                    [JsonProperty("77")]
+                    public int Type77 { get; set; }
+                    [JsonProperty("78")]
+                    public int Type78 { get; set; }
+                    [JsonProperty("79")]
+                    public int Type79 { get; set; }
+                    [JsonProperty("80")]
+                    public int Type80 { get; set; }
+
+                    [JsonProperty("81")]
+                    public int Type81 { get; set; }
+                    [JsonProperty("82")]
+                    public int Type82 { get; set; }
+                    [JsonProperty("83")]
+                    public int Type83 { get; set; }
+                    [JsonProperty("84")]
+                    public int Type84 { get; set; }
+                    [JsonProperty("85")]
+                    public int Type85 { get; set; }
+                    [JsonProperty("86")]
+                    public int Type86 { get; set; }
+                    [JsonProperty("87")]
+                    public int Type87 { get; set; }
+                    [JsonProperty("88")]
+                    public int Type88 { get; set; }
+                    [JsonProperty("89")]
+                    public int Type89 { get; set; }
+                    [JsonProperty("90")]
+                    public int Type90 { get; set; }
+
+                    [JsonProperty("91")]
+                    public int Type91 { get; set; }
+                    [JsonProperty("92")]
+                    public int Type92 { get; set; }
+                    [JsonProperty("93")]
+                    public int Type93 { get; set; }
+                    [JsonProperty("94")]
+                    public int Type94 { get; set; }
+
+                }
+
                 public int api_id { get; set; }
                 public int api_sortno { get; set; }
                 public string api_name { get; set; }
-                /// <summary>
-                /// 修理時間区分
-                /// </summary>
                 public int api_scnt { get; set; }
                 public int api_kcnt { get; set; }
                 public ApiEquipType api_equip_type { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstSlotitem
             {
                 public int api_id { get; set; }
                 public int api_sortno { get; set; }
                 public string api_name { get; set; }
-                public int[] api_type { get; set; }
+                public List<int> api_type { get; set; }
                 public int api_taik { get; set; }
                 public int api_souk { get; set; }
                 public int api_houg { get; set; }
@@ -1068,18 +1337,11 @@ namespace KCB
                 public int api_luck { get; set; }
                 public int api_leng { get; set; }
                 public int api_rare { get; set; }
-                public int[] api_broken { get; set; }
+                public List<int> api_broken { get; set; }
                 public string api_info { get; set; }
                 public string api_usebull { get; set; }
             }
-            [Obfuscation(Exclude = true)]
-            public class ApiMstSlotitemgraph
-            {
-                public int api_id { get; set; }
-                public int api_sortno { get; set; }
-                public string api_filename { get; set; }
-                public string api_version { get; set; }
-            }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstFurniture
             {
@@ -1091,7 +1353,9 @@ namespace KCB
                 public int api_rarity { get; set; }
                 public int api_price { get; set; }
                 public int api_saleflg { get; set; }
+                public int api_season { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstFurnituregraph
             {
@@ -1101,6 +1365,7 @@ namespace KCB
                 public string api_filename { get; set; }
                 public string api_version { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstUseitem
             {
@@ -1108,9 +1373,10 @@ namespace KCB
                 public int api_usetype { get; set; }
                 public int api_category { get; set; }
                 public string api_name { get; set; }
-                public string[] api_description { get; set; }
+                public List<string> api_description { get; set; }
                 public int api_price { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstPayitem
             {
@@ -1118,15 +1384,17 @@ namespace KCB
                 public int api_type { get; set; }
                 public string api_name { get; set; }
                 public string api_description { get; set; }
-                public int[] api_item { get; set; }
+                public List<int> api_item { get; set; }
                 public int api_price { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstItemShop
             {
-                public int[] api_cabinet_1 { get; set; }
-                public int[] api_cabinet_2 { get; set; }
+                public List<int> api_cabinet_1 { get; set; }
+                public List<int> api_cabinet_2 { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstMaparea
             {
@@ -1134,6 +1402,7 @@ namespace KCB
                 public string api_name { get; set; }
                 public int api_type { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstMapinfo
             {
@@ -1144,19 +1413,22 @@ namespace KCB
                 public int api_level { get; set; }
                 public string api_opetext { get; set; }
                 public string api_infotext { get; set; }
-                public int[] api_item { get; set; }
-                public int? api_max_maphp { get; set; }
+                public List<int> api_item { get; set; }
+                public object api_max_maphp { get; set; }
                 public int? api_required_defeat_count { get; set; }
+                public List<int> api_sally_flag { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstMapbgm
             {
                 public int api_id { get; set; }
                 public int api_maparea_id { get; set; }
                 public int api_no { get; set; }
-                public int[] api_map_bgm { get; set; }
-                public int[] api_boss_bgm { get; set; }
+                public List<int> api_map_bgm { get; set; }
+                public List<int> api_boss_bgm { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstMapcell
             {
@@ -1167,6 +1439,7 @@ namespace KCB
                 public int api_no { get; set; }
                 public int api_color_no { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstMission
             {
@@ -1178,195 +1451,79 @@ namespace KCB
                 public int api_difficulty { get; set; }
                 public double api_use_fuel { get; set; }
                 public double api_use_bull { get; set; }
-                public int[] api_win_item1 { get; set; }
-                public int[] api_win_item2 { get; set; }
+                public List<int> api_win_item1 { get; set; }
+                public List<int> api_win_item2 { get; set; }
+                public int api_return_flag { get; set; }
             }
-            [Obfuscation(Exclude = true)]
-            public class ApiBokoMaxShips
-            {
-                public string api_string_value { get; set; }
-                public int api_int_value { get; set; }
-            }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstConst
             {
+                [Obfuscation(Exclude = true)]
+                public class ApiParallelQuestMax
+                {
+                    public string api_string_value { get; set; }
+                    public int api_int_value { get; set; }
+                }
+
+                [Obfuscation(Exclude = true)]
+                public class ApiDpflagQuest
+                {
+                    public string api_string_value { get; set; }
+                    public int api_int_value { get; set; }
+                }
+
+                [Obfuscation(Exclude = true)]
+                public class ApiBokoMaxShips
+                {
+                    public string api_string_value { get; set; }
+                    public int api_int_value { get; set; }
+                }
+                public ApiParallelQuestMax api_parallel_quest_max { get; set; }
+                public ApiDpflagQuest api_dpflag_quest { get; set; }
                 public ApiBokoMaxShips api_boko_max_ships { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
             public class ApiMstShipupgrade
             {
                 public int api_id { get; set; }
+                public int api_current_ship_id { get; set; }
                 public int api_original_ship_id { get; set; }
                 public int api_upgrade_type { get; set; }
                 public int api_upgrade_level { get; set; }
                 public int api_drawing_count { get; set; }
+                public int api_catapult_count { get; set; }
                 public int api_sortno { get; set; }
             }
+
             [Obfuscation(Exclude = true)]
-            public class ApiEquipType
+            public class ApiMstBgm
             {
-
-                [JsonProperty("1")]
-                public int Type1 { get; set; }
-
-                [JsonProperty("2")]
-                public int Type2 { get; set; }
-
-                [JsonProperty("3")]
-                public int Type3 { get; set; }
-
-                [JsonProperty("4")]
-                public int Type4 { get; set; }
-
-                [JsonProperty("5")]
-                public int Type5 { get; set; }
-
-                [JsonProperty("6")]
-                public int Type6 { get; set; }
-
-                [JsonProperty("7")]
-                public int Type7 { get; set; }
-
-                [JsonProperty("8")]
-                public int Type8 { get; set; }
-
-                [JsonProperty("9")]
-                public int Type9 { get; set; }
-
-                [JsonProperty("10")]
-                public int Type10 { get; set; }
-
-                [JsonProperty("11")]
-                public int Type11 { get; set; }
-
-                [JsonProperty("12")]
-                public int Type12 { get; set; }
-
-                [JsonProperty("13")]
-                public int Type13 { get; set; }
-
-                [JsonProperty("14")]
-                public int Type14 { get; set; }
-
-                [JsonProperty("15")]
-                public int Type15 { get; set; }
-
-                [JsonProperty("16")]
-                public int Type16 { get; set; }
-
-                [JsonProperty("17")]
-                public int Type17 { get; set; }
-
-                [JsonProperty("18")]
-                public int Type18 { get; set; }
-
-                [JsonProperty("19")]
-                public int Type19 { get; set; }
-
-                [JsonProperty("20")]
-                public int Type20 { get; set; }
-
-                [JsonProperty("21")]
-                public int Type21 { get; set; }
-
-                [JsonProperty("22")]
-                public int Type22 { get; set; }
-
-                [JsonProperty("23")]
-                public int Type23 { get; set; }
-
-                [JsonProperty("24")]
-                public int Type24 { get; set; }
-
-                [JsonProperty("25")]
-                public int Type25 { get; set; }
-
-                [JsonProperty("26")]
-                public int Type26 { get; set; }
-
-                [JsonProperty("27")]
-                public int Type27 { get; set; }
-
-                [JsonProperty("28")]
-                public int Type28 { get; set; }
-
-                [JsonProperty("29")]
-                public int Type29 { get; set; }
-
-                [JsonProperty("30")]
-                public int Type30 { get; set; }
-
-                [JsonProperty("31")]
-                public int Type31 { get; set; }
-
-                [JsonProperty("32")]
-                public int Type32 { get; set; }
-
-                [JsonProperty("33")]
-                public int Type33 { get; set; }
-
-                [JsonProperty("34")]
-                public int Type34 { get; set; }
-
-                [JsonProperty("35")]
-                public int Type35 { get; set; }
-
-                [JsonProperty("36")]
-                public int Type36 { get; set; }
-
-                [JsonProperty("37")]
-                public int Type37 { get; set; }
-
-                [JsonProperty("38")]
-                public int Type38 { get; set; }
-
-                [JsonProperty("39")]
-                public int Type39 { get; set; }
-
-                [JsonProperty("40")]
-                public int Type40 { get; set; }
-
-                [JsonProperty("41")]
-                public int Type41 { get; set; }
-
-                [JsonProperty("42")]
-                public int Type42 { get; set; }
-
-                [JsonProperty("43")]
-                public int Type43 { get; set; }
-
-                [JsonProperty("44")]
-                public int Type44 { get; set; }
-
-                [JsonProperty("45")]
-                public int Type45 { get; set; }
-
-                [JsonProperty("46")]
-                public int Type46 { get; set; }
-
-
+                public int api_id { get; set; }
+                public string api_name { get; set; }
             }
-
-            public ApiMstShip[] api_mst_ship { get; set; }
-            public ApiMstShipgraph[] api_mst_shipgraph { get; set; }
-            public ApiMstSlotitemEquiptype[] api_mst_slotitem_equiptype { get; set; }
-            public ApiMstStype[] api_mst_stype { get; set; }
-            public ApiMstSlotitem[] api_mst_slotitem { get; set; }
-            public ApiMstSlotitemgraph[] api_mst_slotitemgraph { get; set; }
-            public ApiMstFurniture[] api_mst_furniture { get; set; }
-            public ApiMstFurnituregraph[] api_mst_furnituregraph { get; set; }
-            public ApiMstUseitem[] api_mst_useitem { get; set; }
-            public ApiMstPayitem[] api_mst_payitem { get; set; }
+            public List<ApiMstShip> api_mst_ship { get; set; }
+            public List<ApiMstShipgraph> api_mst_shipgraph { get; set; }
+            public List<ApiMstSlotitemEquiptype> api_mst_slotitem_equiptype { get; set; }
+            public List<int> api_mst_equip_exslot { get; set; }
+            public List<ApiMstStype> api_mst_stype { get; set; }
+            public List<ApiMstSlotitem> api_mst_slotitem { get; set; }
+            public List<ApiMstFurniture> api_mst_furniture { get; set; }
+            public List<ApiMstFurnituregraph> api_mst_furnituregraph { get; set; }
+            public List<ApiMstUseitem> api_mst_useitem { get; set; }
+            public List<ApiMstPayitem> api_mst_payitem { get; set; }
             public ApiMstItemShop api_mst_item_shop { get; set; }
-            public ApiMstMaparea[] api_mst_maparea { get; set; }
-            public ApiMstMapinfo[] api_mst_mapinfo { get; set; }
-            public ApiMstMapbgm[] api_mst_mapbgm { get; set; }
-            public ApiMstMapcell[] api_mst_mapcell { get; set; }
-            public ApiMstMission[] api_mst_mission { get; set; }
+            public List<ApiMstMaparea> api_mst_maparea { get; set; }
+            public List<ApiMstMapinfo> api_mst_mapinfo { get; set; }
+            public List<ApiMstMapbgm> api_mst_mapbgm { get; set; }
+            public List<ApiMstMapcell> api_mst_mapcell { get; set; }
+            public List<ApiMstMission> api_mst_mission { get; set; }
             public ApiMstConst api_mst_const { get; set; }
-            public ApiMstShipupgrade[] api_mst_shipupgrade { get; set; }
+            public List<ApiMstShipupgrade> api_mst_shipupgrade { get; set; }
+            public List<ApiMstBgm> api_mst_bgm { get; set; }
+            public int api_register_status { get; set; }
         }
-
         public int api_result { get; set; }
         public string api_result_msg { get; set; }
         public ApiData api_data { get; set; }

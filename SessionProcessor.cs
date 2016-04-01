@@ -149,6 +149,10 @@ namespace KCB2
                     _parent.UpdateStatus("ゲームを開始しました");
                     break;
 
+                case "/kcsapi/api_get_member/require_info":
+                    RequireInfo(responseJson);
+                    break;
+
                 case "/kcsapi/api_get_member/basic":
                     Basic(responseJson);
                     break;

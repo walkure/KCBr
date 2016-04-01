@@ -620,5 +620,40 @@ namespace KCB2
 
             UpdateDetailStatus("スロット{1}の編成記録を第{0}艦隊へ展開させました", queryParam["api_deck_id"], queryParam["api_preset_no"]);
         }
+
+        /// <summary>
+        /// api_get_member/require_info
+        /// </summary>
+        /// <param name="responseJson">JSON</param>
+        void RequireInfo(string responseJson)
+        {
+            var json = JsonConvert.DeserializeObject<KCB.api_get_member.RequireInfo>(responseJson);
+
+            if (json.api_result != 1)
+                return;
+
+            //basic
+            _memberBasic.UpdateRequireInfo(json.api_data.api_basic);
+
+            //slot_item
+            _memberItem.UpdateItem(json.api_data.api_slot_item, _masterItem);
+            _memberItem.UpdateItemOwnerShip(_memberShip);
+            _memberShip.ApplySlotItemData(_memberItem);
+
+            UpdateDetailStatus("装備一覧を更新しました");
+            UpdateWindowTitle();
+
+            //kdock
+            _memberDock.UpdateBuildKDock(json.api_data.api_kdock, _masterShip);
+            var kit = _logCreateShip.CreateLogData(_memberDock, _memberBasic
+                , _memberDeck, _memberShip);
+
+            if (kit != null)
+                _parent.AddCreateShipResult(kit);
+            _parent.UpdateBuildDock(_memberDock);
+            _parent.UpdateDeckMemberList(_memberShip, _memberDeck.DeckList);
+            _parent.UpdateItemList(_memberItem.ItemList);
+            _parent.UpdateShipList(_memberShip.ShipList);
+        }
     }
 }
