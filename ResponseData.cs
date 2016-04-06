@@ -387,56 +387,6 @@ namespace KCB
                     public int api_firstflag { get; set; }
                 }
 
-                [Obfuscation(Exclude = true)]
-                public class ApiUnsetslot
-                {
-                    public List<int> api_slottype1 { get; set; }
-                    public List<int> api_slottype2 { get; set; }
-                    public List<int> api_slottype3 { get; set; }
-                    public List<int> api_slottype4 { get; set; }
-                    public List<int> api_slottype5 { get; set; }
-                    public List<int> api_slottype6 { get; set; }
-                    public List<int> api_slottype7 { get; set; }
-                    public List<int> api_slottype8 { get; set; }
-                    public List<int> api_slottype9 { get; set; }
-                    public List<int> api_slottype10 { get; set; }
-                    public List<int> api_slottype11 { get; set; }
-                    public List<int> api_slottype12 { get; set; }
-                    public List<int> api_slottype13 { get; set; }
-                    public List<int> api_slottype14 { get; set; }
-                    public List<int> api_slottype15 { get; set; }
-                    public int api_slottype16 { get; set; }
-                    public List<int> api_slottype17 { get; set; }
-                    public List<int> api_slottype18 { get; set; }
-                    public List<int> api_slottype19 { get; set; }
-                    public int api_slottype20 { get; set; }
-                    public List<int> api_slottype21 { get; set; }
-                    public List<int> api_slottype22 { get; set; }
-                    public List<int> api_slottype23 { get; set; }
-                    public int api_slottype24 { get; set; }
-                    public List<int> api_slottype25 { get; set; }
-                    public List<int> api_slottype26 { get; set; }
-                    public List<int> api_slottype27 { get; set; }
-                    public List<int> api_slottype28 { get; set; }
-                    public List<int> api_slottype29 { get; set; }
-                    public int api_slottype30 { get; set; }
-                    public List<int> api_slottype31 { get; set; }
-                    public List<int> api_slottype32 { get; set; }
-                    public List<int> api_slottype33 { get; set; }
-                    public int api_slottype34 { get; set; }
-                    public List<int> api_slottype35 { get; set; }
-                    public List<int> api_slottype36 { get; set; }
-                    public List<int> api_slottype37 { get; set; }
-                    public int api_slottype38 { get; set; }
-                    public List<int> api_slottype39 { get; set; }
-                    public int api_slottype40 { get; set; }
-                    public int api_slottype41 { get; set; }
-                    public int api_slottype42 { get; set; }
-                    public List<int> api_slottype43 { get; set; }
-                    public List<int> api_slottype44 { get; set; }
-                    public int api_slottype45 { get; set; }
-                    public int api_slottype46 { get; set; }
-                }
 
                 [Obfuscation(Exclude = true)]
                 public class ApiUseitem
@@ -456,7 +406,7 @@ namespace KCB
 
                 public ApiBasic api_basic { get; set; }
                 public List<Slot_Item.ApiData> api_slot_item { get; set; }
-                public ApiUnsetslot api_unsetslot { get; set; }
+                public Ship3.ApiData.ApiSlotData api_unsetslot { get; set; }
                 public List<KDock.ApiData> api_kdock { get; set; }
                 public List<ApiUseitem> api_useitem { get; set; }
                 public List<ApiFurniture> api_furniture { get; set; }
