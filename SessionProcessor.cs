@@ -222,6 +222,14 @@ namespace KCB2
                     UpdateDetailStatus("装備を変更しました");
                     break;
 
+                case "/kcsapi/api_req_kaisou/slot_deprive":
+                    PullOutSlotItem(queryParam, responseJson, _memberShip, _memberItem);
+                    break;
+
+                case "/kcsapi/api_req_kaisou/slot_exchange_index":
+                    ChangeSlotItemIndex(queryParam["api_id"], responseJson, _memberShip);
+                    break;
+
                 case "/kcsapi/api_req_sortie/battleresult":
                     //2014夏イベントでの連合艦隊戦闘結果
                 case "/kcsapi/api_req_combined_battle/battleresult":

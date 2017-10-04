@@ -781,9 +781,57 @@ namespace KCB2.MasterData
                 Type44 = 48,
                 Type45 = 49,
                 Type46 = 50,
+                Type47 = 51,
+                Type48 = 52,
+                Type49 = 53,
+                Type50 = 54,
+                Type51 = 55,
+                Type52 = 56,
+                Type53 = 57,
+                Type54 = 58,
+                Type55 = 59,
+                Type56 = 60,
+                Type57 = 61,
+                Type58 = 62,
+                Type59 = 63,
+                Type60 = 64,
+                Type61 = 65,
+                Type62 = 66,
+                Type63 = 67,
+                Type64 = 68,
+                Type65 = 69,
+                Type66 = 70,
+                Type67 = 71,
+                Type68 = 72,
+                Type69 = 73,
+                Type70 = 74,
+                Type71 = 75,
+                Type72 = 76,
+                Type73 = 77,
+                Type74 = 78,
+                Type75 = 79,
+                Type76 = 80,
+                Type77 = 81,
+                Type78 = 82,
+                Type79 = 83,
+                Type80 = 84,
+                Type81 = 85,
+                Type82 = 86,
+                Type83 = 87,
+                Type84 = 88,
+                Type85 = 89,
+                Type86 = 90,
+                Type87 = 91,
+                Type88 = 92,
+                Type89 = 93,
+                Type90 = 94,
+                Type91 = 95,
+                Type92 = 96,
+                Type93 = 97,
+                Type94 = 98,
             }
 
-            static string GetColumnText(ItemOrder it)
+            static string GetColumnText(Item itemMaster, ItemOrder it)
             {
                 switch (it)
                 {
@@ -843,7 +891,55 @@ namespace KCB2.MasterData
                     case ItemOrder.Type44:
                     case ItemOrder.Type45:
                     case ItemOrder.Type46:
-                        return Item.Param.GetItemDicType((int)it - 4);
+                    case ItemOrder.Type47:
+                    case ItemOrder.Type48:
+                    case ItemOrder.Type49:
+                    case ItemOrder.Type50:
+                    case ItemOrder.Type51:
+                    case ItemOrder.Type52:
+                    case ItemOrder.Type53:
+                    case ItemOrder.Type54:
+                    case ItemOrder.Type55:
+                    case ItemOrder.Type56:
+                    case ItemOrder.Type57:
+                    case ItemOrder.Type58:
+                    case ItemOrder.Type59:
+                    case ItemOrder.Type60:
+                    case ItemOrder.Type61:
+                    case ItemOrder.Type62:
+                    case ItemOrder.Type63:
+                    case ItemOrder.Type64:
+                    case ItemOrder.Type65:
+                    case ItemOrder.Type66:
+                    case ItemOrder.Type67:
+                    case ItemOrder.Type68:
+                    case ItemOrder.Type69:
+                    case ItemOrder.Type70:
+                    case ItemOrder.Type71:
+                    case ItemOrder.Type72:
+                    case ItemOrder.Type73:
+                    case ItemOrder.Type74:
+                    case ItemOrder.Type75:
+                    case ItemOrder.Type76:
+                    case ItemOrder.Type77:
+                    case ItemOrder.Type78:
+                    case ItemOrder.Type79:
+                    case ItemOrder.Type80:
+                    case ItemOrder.Type81:
+                    case ItemOrder.Type82:
+                    case ItemOrder.Type83:
+                    case ItemOrder.Type84:
+                    case ItemOrder.Type85:
+                    case ItemOrder.Type86:
+                    case ItemOrder.Type87:
+                    case ItemOrder.Type88:
+                    case ItemOrder.Type89:
+                    case ItemOrder.Type90:
+                    case ItemOrder.Type91:
+                    case ItemOrder.Type92:
+                    case ItemOrder.Type93:
+                    case ItemOrder.Type94:
+                        return itemMaster.GetItemDicType((int)it - 4);
                     default:
                         throw new IndexOutOfRangeException();
                 }
@@ -859,13 +955,12 @@ namespace KCB2.MasterData
             /// カラムを追加
             /// </summary>
             /// <param name="lvShip"></param>
-            public static void InitializeColumn(System.Windows.Forms.ListView
-                lvShip)
+            public static void InitializeColumn(Item itemMaster, System.Windows.Forms.ListView lvShip)
             {
                 foreach (ItemOrder it in Enum.GetValues(typeof(ItemOrder)))
                 {
                     System.Windows.Forms.ColumnHeader col = new System.Windows.Forms.ColumnHeader();
-                    col.Text = GetColumnText(it);
+                    col.Text = GetColumnText(itemMaster, it);
                     col.DisplayIndex = (int)it;
                     lvShip.Columns.Add(col);
                 }
@@ -962,11 +1057,54 @@ namespace KCB2.MasterData
                 SubItems[(int)ItemOrder.Type44] = new LVIntSubItem(this, json.api_equip_type.Type44);
                 SubItems[(int)ItemOrder.Type45] = new LVIntSubItem(this, json.api_equip_type.Type45);
                 SubItems[(int)ItemOrder.Type46] = new LVIntSubItem(this, json.api_equip_type.Type46);
-            }
-
-            public ShipTypeLVItem()
-            {
-                InitializeSubItem();
+                SubItems[(int)ItemOrder.Type47] = new LVIntSubItem(this, json.api_equip_type.Type47);
+                SubItems[(int)ItemOrder.Type48] = new LVIntSubItem(this, json.api_equip_type.Type48);
+                SubItems[(int)ItemOrder.Type49] = new LVIntSubItem(this, json.api_equip_type.Type49);
+                SubItems[(int)ItemOrder.Type50] = new LVIntSubItem(this, json.api_equip_type.Type50);
+                SubItems[(int)ItemOrder.Type51] = new LVIntSubItem(this, json.api_equip_type.Type51);
+                SubItems[(int)ItemOrder.Type52] = new LVIntSubItem(this, json.api_equip_type.Type52);
+                SubItems[(int)ItemOrder.Type53] = new LVIntSubItem(this, json.api_equip_type.Type53);
+                SubItems[(int)ItemOrder.Type54] = new LVIntSubItem(this, json.api_equip_type.Type54);
+                SubItems[(int)ItemOrder.Type55] = new LVIntSubItem(this, json.api_equip_type.Type55);
+                SubItems[(int)ItemOrder.Type56] = new LVIntSubItem(this, json.api_equip_type.Type56);
+                SubItems[(int)ItemOrder.Type57] = new LVIntSubItem(this, json.api_equip_type.Type57);
+                SubItems[(int)ItemOrder.Type58] = new LVIntSubItem(this, json.api_equip_type.Type58);
+                SubItems[(int)ItemOrder.Type59] = new LVIntSubItem(this, json.api_equip_type.Type59);
+                SubItems[(int)ItemOrder.Type60] = new LVIntSubItem(this, json.api_equip_type.Type60);
+                SubItems[(int)ItemOrder.Type61] = new LVIntSubItem(this, json.api_equip_type.Type61);
+                SubItems[(int)ItemOrder.Type62] = new LVIntSubItem(this, json.api_equip_type.Type62);
+                SubItems[(int)ItemOrder.Type63] = new LVIntSubItem(this, json.api_equip_type.Type63);
+                SubItems[(int)ItemOrder.Type64] = new LVIntSubItem(this, json.api_equip_type.Type64);
+                SubItems[(int)ItemOrder.Type65] = new LVIntSubItem(this, json.api_equip_type.Type65);
+                SubItems[(int)ItemOrder.Type66] = new LVIntSubItem(this, json.api_equip_type.Type66);
+                SubItems[(int)ItemOrder.Type67] = new LVIntSubItem(this, json.api_equip_type.Type67);
+                SubItems[(int)ItemOrder.Type68] = new LVIntSubItem(this, json.api_equip_type.Type68);
+                SubItems[(int)ItemOrder.Type69] = new LVIntSubItem(this, json.api_equip_type.Type69);
+                SubItems[(int)ItemOrder.Type70] = new LVIntSubItem(this, json.api_equip_type.Type70);
+                SubItems[(int)ItemOrder.Type71] = new LVIntSubItem(this, json.api_equip_type.Type71);
+                SubItems[(int)ItemOrder.Type72] = new LVIntSubItem(this, json.api_equip_type.Type72);
+                SubItems[(int)ItemOrder.Type73] = new LVIntSubItem(this, json.api_equip_type.Type73);
+                SubItems[(int)ItemOrder.Type74] = new LVIntSubItem(this, json.api_equip_type.Type74);
+                SubItems[(int)ItemOrder.Type75] = new LVIntSubItem(this, json.api_equip_type.Type75);
+                SubItems[(int)ItemOrder.Type76] = new LVIntSubItem(this, json.api_equip_type.Type76);
+                SubItems[(int)ItemOrder.Type77] = new LVIntSubItem(this, json.api_equip_type.Type77);
+                SubItems[(int)ItemOrder.Type78] = new LVIntSubItem(this, json.api_equip_type.Type78);
+                SubItems[(int)ItemOrder.Type79] = new LVIntSubItem(this, json.api_equip_type.Type79);
+                SubItems[(int)ItemOrder.Type80] = new LVIntSubItem(this, json.api_equip_type.Type80);
+                SubItems[(int)ItemOrder.Type81] = new LVIntSubItem(this, json.api_equip_type.Type81);
+                SubItems[(int)ItemOrder.Type82] = new LVIntSubItem(this, json.api_equip_type.Type82);
+                SubItems[(int)ItemOrder.Type83] = new LVIntSubItem(this, json.api_equip_type.Type83);
+                SubItems[(int)ItemOrder.Type84] = new LVIntSubItem(this, json.api_equip_type.Type84);
+                SubItems[(int)ItemOrder.Type85] = new LVIntSubItem(this, json.api_equip_type.Type85);
+                SubItems[(int)ItemOrder.Type86] = new LVIntSubItem(this, json.api_equip_type.Type86);
+                SubItems[(int)ItemOrder.Type87] = new LVIntSubItem(this, json.api_equip_type.Type87);
+                SubItems[(int)ItemOrder.Type88] = new LVIntSubItem(this, json.api_equip_type.Type88);
+                SubItems[(int)ItemOrder.Type89] = new LVIntSubItem(this, json.api_equip_type.Type89);
+                SubItems[(int)ItemOrder.Type90] = new LVIntSubItem(this, json.api_equip_type.Type90);
+                SubItems[(int)ItemOrder.Type91] = new LVIntSubItem(this, json.api_equip_type.Type91);
+                SubItems[(int)ItemOrder.Type92] = new LVIntSubItem(this, json.api_equip_type.Type92);
+                SubItems[(int)ItemOrder.Type93] = new LVIntSubItem(this, json.api_equip_type.Type93);
+                SubItems[(int)ItemOrder.Type94] = new LVIntSubItem(this, json.api_equip_type.Type94);
             }
 
             public ShipTypeLVItem(KCB.api_start2.ApiData.ApiMstStype json)

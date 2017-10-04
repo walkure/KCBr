@@ -1,6 +1,6 @@
 charset:utf-8 CRLF
 
-KCBr2 (KanColle BRowser v2) 適当なトリセツ  by http://www.3pf.jp/ 2016 Apr.
+KCBr2 (KanColle BRowser v2) 適当なトリセツ  by http://www.3pf.jp/ 2017 Oct.
 
 ■やってること
 IWebBrowser2(要はInternet Explorer)に艦これFlashを表示させて、通信をHttpListenerで覗いて流れてるJSONを適当にデコード
@@ -36,6 +36,9 @@ C:\> netsh http add urlacl url=http://127.0.0.1:8088/ user=everyone
 
 別にユーザ名はeveryoneである必要はなくて該当ユーザでも大丈夫でしょう。netshを叩くコマンドプロンプトは管理者で
 起動しないとだめですね。
+
+もし、起動時にHttpListenerの起動がERROR_HOST_UNREACHABLE(0x4d0,1232)で失敗した場合は、netsh http show iplistenで
+http.sysの待機するIPアドレスが指定されている場合がありますので確認してください。
 
 ポート番号を変えたい時は、portの数字を適当に変えて再起動してください。
 
@@ -595,3 +598,14 @@ http://www.3pf.jp/profile を参照
 
 2016/04/06 2.7.7.3
  ・装備保有状況によっては解析に失敗するバグを潰した
+
+2017/10/04 2.7.7.4
+ ・Slackへ通知を投げられるようにした
+ ・勝敗判定に開幕対潜攻撃を入れた
+ ・ゲームサーバ等への接続に失敗した場合にプロキシでハンドルし再試行できるようにした
+ ・回避・索敵・対潜パラメタ表示を素値と装備加算で分けた
+ ・装備の入れ替え・並び替えに対応
+ ・スレッドプールの上限を増やしました
+ ・追加された装備アイコンを追加
+ ・マスタから取れる装備種類名はマスタから取るようにしました
+ ・プロキシ起動失敗時のエラー出力を増やしました

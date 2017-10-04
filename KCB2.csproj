@@ -217,6 +217,12 @@
     <Compile Include="FormSlotItemList.Designer.cs">
       <DependentUpon>FormSlotItemList.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormUriInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUriInput.Designer.cs">
+      <DependentUpon>FormUriInput.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormVolume.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -350,6 +356,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormSlotItemList.resx">
       <DependentUpon>FormSlotItemList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormUriInput.resx">
+      <DependentUpon>FormUriInput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormVolume.resx">
       <DependentUpon>FormVolume.cs</DependentUpon>

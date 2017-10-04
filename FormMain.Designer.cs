@@ -60,10 +60,10 @@
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.tweakToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearQuestInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.adjustFlashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.switchViewModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.adjustFlashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lockUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.sendTimerInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,6 +71,7 @@
             this.devMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sessionInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showJsonLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openUriToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.versionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timerBattleInterval = new System.Windows.Forms.Timer(this.components);
             this.imageListSlotItemType = new System.Windows.Forms.ImageList(this.components);
@@ -232,7 +233,7 @@
             this.showQuestButton.Image = ((System.Drawing.Image)(resources.GetObject("showQuestButton.Image")));
             this.showQuestButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showQuestButton.Name = "showQuestButton";
-            this.showQuestButton.Size = new System.Drawing.Size(77, 20);
+            this.showQuestButton.Size = new System.Drawing.Size(81, 20);
             this.showQuestButton.Text = "[進行中任務]";
             this.showQuestButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.showQuestButton_MouseDown);
             // 
@@ -265,14 +266,14 @@
             this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
             this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-            this.toolStripDropDownButton2.Size = new System.Drawing.Size(42, 20);
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(44, 20);
             this.toolStripDropDownButton2.Text = "表示";
             // 
             // shipListToolStripMenuItem
             // 
             this.shipListToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.shipListToolStripMenuItem.Name = "shipListToolStripMenuItem";
-            this.shipListToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.shipListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.shipListToolStripMenuItem.Text = "艦娘一覧";
             this.shipListToolStripMenuItem.Click += new System.EventHandler(this.shipListToolStripMenuItem_Click);
             // 
@@ -283,20 +284,20 @@
             this.slotItemDetailToolStripMenuItem,
             this.slotItemSummaryToolStripMenuItem});
             this.ItemListToolStripMenuItem.Name = "ItemListToolStripMenuItem";
-            this.ItemListToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.ItemListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ItemListToolStripMenuItem.Text = "装備一覧";
             // 
             // slotItemDetailToolStripMenuItem
             // 
             this.slotItemDetailToolStripMenuItem.Name = "slotItemDetailToolStripMenuItem";
-            this.slotItemDetailToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.slotItemDetailToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.slotItemDetailToolStripMenuItem.Text = "装備個別表示";
             this.slotItemDetailToolStripMenuItem.Click += new System.EventHandler(this.slotItemDetailToolStripMenuItem_Click);
             // 
             // slotItemSummaryToolStripMenuItem
             // 
             this.slotItemSummaryToolStripMenuItem.Name = "slotItemSummaryToolStripMenuItem";
-            this.slotItemSummaryToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.slotItemSummaryToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.slotItemSummaryToolStripMenuItem.Text = "装備をまとめて表示";
             this.slotItemSummaryToolStripMenuItem.Click += new System.EventHandler(this.slotItemSummaryToolStripMenuItem_Click);
             // 
@@ -304,14 +305,14 @@
             // 
             this.LogToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.LogToolStripMenuItem.Name = "LogToolStripMenuItem";
-            this.LogToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.LogToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.LogToolStripMenuItem.Text = "記録一覧";
             this.LogToolStripMenuItem.Click += new System.EventHandler(this.LogToolStripMenuItem_Click);
             // 
             // masterDataToolStripMenuItem
             // 
             this.masterDataToolStripMenuItem.Name = "masterDataToolStripMenuItem";
-            this.masterDataToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.masterDataToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.masterDataToolStripMenuItem.Text = "マスタデータ一覧";
             this.masterDataToolStripMenuItem.Visible = false;
             this.masterDataToolStripMenuItem.Click += new System.EventHandler(this.masterDataToolStripMenuItem_Click);
@@ -322,7 +323,7 @@
             this.screenShotButton.Image = ((System.Drawing.Image)(resources.GetObject("screenShotButton.Image")));
             this.screenShotButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.screenShotButton.Name = "screenShotButton";
-            this.screenShotButton.Size = new System.Drawing.Size(61, 20);
+            this.screenShotButton.Size = new System.Drawing.Size(65, 20);
             this.screenShotButton.Text = "[キャプチャ]";
             this.screenShotButton.Click += new System.EventHandler(this.screenShotButton_Click);
             // 
@@ -332,21 +333,21 @@
             this.volumeButton.Image = ((System.Drawing.Image)(resources.GetObject("volumeButton.Image")));
             this.volumeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.volumeButton.Name = "volumeButton";
-            this.volumeButton.Size = new System.Drawing.Size(41, 20);
+            this.volumeButton.Size = new System.Drawing.Size(45, 20);
             this.volumeButton.Text = "[音量]";
             this.volumeButton.Click += new System.EventHandler(this.volumeButton_Click);
             // 
             // toolStripTimeFromLastBattle
             // 
             this.toolStripTimeFromLastBattle.Name = "toolStripTimeFromLastBattle";
-            this.toolStripTimeFromLastBattle.Size = new System.Drawing.Size(13, 17);
+            this.toolStripTimeFromLastBattle.Size = new System.Drawing.Size(15, 17);
             this.toolStripTimeFromLastBattle.Text = "  ";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(692, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(674, 17);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = "レディ";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -367,70 +368,73 @@
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(42, 20);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(44, 20);
             this.toolStripDropDownButton1.Text = "操作";
             // 
             // tweakToolStripMenuItem
             // 
             this.tweakToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.clearQuestInfoToolStripMenuItem,this.clearCacheToolStripMenuItem,this.switchViewModeToolStripMenuItem,this.adjustFlashToolStripMenuItem});
+            this.clearQuestInfoToolStripMenuItem,
+            this.clearCacheToolStripMenuItem,
+            this.switchViewModeToolStripMenuItem,
+            this.adjustFlashToolStripMenuItem});
             this.tweakToolStripMenuItem.Name = "tweakToolStripMenuItem";
-            this.tweakToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.tweakToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.tweakToolStripMenuItem.Text = "操作";
             // 
             // clearQuestInfoToolStripMenuItem
             // 
             this.clearQuestInfoToolStripMenuItem.Name = "clearQuestInfoToolStripMenuItem";
-            this.clearQuestInfoToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.clearQuestInfoToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.clearQuestInfoToolStripMenuItem.Text = "任務情報を消去";
             this.clearQuestInfoToolStripMenuItem.Click += new System.EventHandler(this.clearQuestInfoToolStripMenuItem_Click);
-            // 
-            // reloadBrowserToolStripMenuItem
-            // 
-            this.reloadBrowserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.reloadBrowserToolStripMenuItem.Name = "reloadBrowserToolStripMenuItem";
-            this.reloadBrowserToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.reloadBrowserToolStripMenuItem.Text = "画面を再読み込み";
-            this.reloadBrowserToolStripMenuItem.Click += new System.EventHandler(this.reloadBrowserToolStripMenuItem_Click);
-            // 
-            // adjustFlashToolStripMenuItem
-            // 
-            this.adjustFlashToolStripMenuItem.Name = "adjustFlashToolStripMenuItem";
-            this.adjustFlashToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.adjustFlashToolStripMenuItem.Text = "フラッシュ位置の再設定";
-            this.adjustFlashToolStripMenuItem.Click += new System.EventHandler(this.adjustFlashToolStripMenuItem_Click);
             // 
             // clearCacheToolStripMenuItem
             // 
             this.clearCacheToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.clearCacheToolStripMenuItem.Name = "clearCacheToolStripMenuItem";
-            this.clearCacheToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.clearCacheToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.clearCacheToolStripMenuItem.Text = "ブラウザキャッシュの削除";
             this.clearCacheToolStripMenuItem.Click += new System.EventHandler(this.clearCacheToolStripMenuItem_Click);
             // 
             // switchViewModeToolStripMenuItem
             // 
             this.switchViewModeToolStripMenuItem.Name = "switchViewModeToolStripMenuItem";
-            this.switchViewModeToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.switchViewModeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.switchViewModeToolStripMenuItem.Text = "縦横切替";
             this.switchViewModeToolStripMenuItem.Click += new System.EventHandler(this.switchViewModeToolStripMenuItem_Click);
+            // 
+            // adjustFlashToolStripMenuItem
+            // 
+            this.adjustFlashToolStripMenuItem.Name = "adjustFlashToolStripMenuItem";
+            this.adjustFlashToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.adjustFlashToolStripMenuItem.Text = "フラッシュ位置の再設定";
+            this.adjustFlashToolStripMenuItem.Click += new System.EventHandler(this.adjustFlashToolStripMenuItem_Click);
+            // 
+            // reloadBrowserToolStripMenuItem
+            // 
+            this.reloadBrowserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.reloadBrowserToolStripMenuItem.Name = "reloadBrowserToolStripMenuItem";
+            this.reloadBrowserToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.reloadBrowserToolStripMenuItem.Text = "画面を再読み込み";
+            this.reloadBrowserToolStripMenuItem.Click += new System.EventHandler(this.reloadBrowserToolStripMenuItem_Click);
             // 
             // lockUIToolStripMenuItem
             // 
             this.lockUIToolStripMenuItem.Name = "lockUIToolStripMenuItem";
-            this.lockUIToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.lockUIToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.lockUIToolStripMenuItem.Text = "画面をロック";
             this.lockUIToolStripMenuItem.Click += new System.EventHandler(this.lockUIToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(180, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(164, 6);
             // 
             // sendTimerInfoToolStripMenuItem
             // 
             this.sendTimerInfoToolStripMenuItem.Name = "sendTimerInfoToolStripMenuItem";
-            this.sendTimerInfoToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.sendTimerInfoToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.sendTimerInfoToolStripMenuItem.Text = "タイマへ情報を送信";
             this.sendTimerInfoToolStripMenuItem.Click += new System.EventHandler(this.sendTimerInfoToolStripMenuItem_Click);
             // 
@@ -438,7 +442,7 @@
             // 
             this.configToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.configToolStripMenuItem.Name = "configToolStripMenuItem";
-            this.configToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.configToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.configToolStripMenuItem.Text = "設定";
             this.configToolStripMenuItem.Click += new System.EventHandler(this.configToolStripMenuItem_Click);
             // 
@@ -446,30 +450,38 @@
             // 
             this.devMenuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sessionInfoToolStripMenuItem,
-            this.showJsonLogToolStripMenuItem});
+            this.showJsonLogToolStripMenuItem,
+            this.openUriToolStripMenuItem});
             this.devMenuToolStripMenuItem.Name = "devMenuToolStripMenuItem";
-            this.devMenuToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.devMenuToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.devMenuToolStripMenuItem.Text = "開発メニュー";
             // 
             // sessionInfoToolStripMenuItem
             // 
             this.sessionInfoToolStripMenuItem.Name = "sessionInfoToolStripMenuItem";
-            this.sessionInfoToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.sessionInfoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.sessionInfoToolStripMenuItem.Text = "セッション情報";
             this.sessionInfoToolStripMenuItem.Click += new System.EventHandler(this.sessionInfoToolStripMenuItem_Click_1);
             // 
             // showJsonLogToolStripMenuItem
             // 
             this.showJsonLogToolStripMenuItem.Name = "showJsonLogToolStripMenuItem";
-            this.showJsonLogToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.showJsonLogToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showJsonLogToolStripMenuItem.Text = "JSONログ表示";
             this.showJsonLogToolStripMenuItem.Click += new System.EventHandler(this.showJsonLogToolStripMenuItem_Click);
+            // 
+            // openUriToolStripMenuItem
+            // 
+            this.openUriToolStripMenuItem.Name = "openUriToolStripMenuItem";
+            this.openUriToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openUriToolStripMenuItem.Text = "指定URIを開く";
+            this.openUriToolStripMenuItem.Click += new System.EventHandler(this.openUriToolStripMenuItem_Click);
             // 
             // versionToolStripMenuItem
             // 
             this.versionToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
-            this.versionToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.versionToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.versionToolStripMenuItem.Text = "バージョン情報";
             this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
@@ -592,6 +604,7 @@
         private EnemyFleetList enemyFleetList;
         private System.Windows.Forms.ToolStripMenuItem clearQuestInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tweakToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openUriToolStripMenuItem;
     }
 }
 

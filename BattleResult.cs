@@ -77,6 +77,13 @@ namespace KCB2.BattleResult
                 }
             }
 
+            //開幕対潜
+            if (result.api_opening_taisen_flag == 1 && result.api_opening_taisen != null)
+            {
+                Debug.WriteLine("開幕対潜攻撃");
+                estimatedBattleTime += getHougekiDamage(result.api_opening_taisen, _battleResult, _masterItem);
+            }
+
             // 開幕雷撃
             if (result.api_opening_flag == 1 && result.api_opening_atack != null)
             {

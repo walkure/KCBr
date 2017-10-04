@@ -118,5 +118,65 @@ namespace KCBTimer.Properties {
                 this["NotifySound"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackWebHookURI {
+            get {
+                return ((string)(this["SlackWebHookURI"]));
+            }
+            set {
+                this["SlackWebHookURI"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackUserName {
+            get {
+                return ((string)(this["SlackUserName"]));
+            }
+            set {
+                this["SlackUserName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackIcon {
+            get {
+                return ((string)(this["SlackIcon"]));
+            }
+            set {
+                this["SlackIcon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackChannel {
+            get {
+                return ((string)(this["SlackChannel"]));
+            }
+            set {
+                this["SlackChannel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackMessagePrefix {
+            get {
+                return ((string)(this["SlackMessagePrefix"]));
+            }
+            set {
+                this["SlackMessagePrefix"] = value;
+            }
+        }
     }
 }

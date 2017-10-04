@@ -28,6 +28,10 @@ namespace KCB2
             //mutexを非シグナル状態へ
             _mutex.WaitOne();
 
+            int workerThreads,completionPortThreads;
+            System.Threading.ThreadPool.GetMaxThreads(out workerThreads,out completionPortThreads);
+            System.Threading.ThreadPool.SetMaxThreads(workerThreads+50, completionPortThreads);
+
 #if !DEBUG
             try
 #endif

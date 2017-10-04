@@ -86,10 +86,10 @@
             this.numProxyPort = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbNotifyFinishBattle = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.tbNotifyServerHost = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.cbNotifyFinishBattle = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numHPThreshold)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -666,7 +666,7 @@
             // 
             this.groupBox10.Controls.Add(this.numUpstreamProxyPort);
             this.groupBox10.Controls.Add(this.tbUpstreamProxyHost);
-            this.groupBox10.Location = new System.Drawing.Point(39, 106);
+            this.groupBox10.Location = new System.Drawing.Point(17, 106);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(281, 40);
             this.groupBox10.TabIndex = 5;
@@ -716,7 +716,7 @@
             0,
             0});
             this.numProxyPort.Name = "numProxyPort";
-            this.numProxyPort.Size = new System.Drawing.Size(107, 19);
+            this.numProxyPort.Size = new System.Drawing.Size(93, 19);
             this.numProxyPort.TabIndex = 1;
             this.numProxyPort.Value = new decimal(new int[] {
             1,
@@ -748,6 +748,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "遠征・出渠通知";
             // 
+            // cbNotifyFinishBattle
+            // 
+            this.cbNotifyFinishBattle.AutoSize = true;
+            this.cbNotifyFinishBattle.Location = new System.Drawing.Point(300, 38);
+            this.cbNotifyFinishBattle.Name = "cbNotifyFinishBattle";
+            this.cbNotifyFinishBattle.Size = new System.Drawing.Size(105, 16);
+            this.cbNotifyFinishBattle.TabIndex = 11;
+            this.cbNotifyFinishBattle.Text = "戦闘終了を通知";
+            this.cbNotifyFinishBattle.UseVisualStyleBackColor = true;
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -773,16 +783,6 @@
             this.label5.Size = new System.Drawing.Size(220, 12);
             this.label5.TabIndex = 8;
             this.label5.Text = "通知先(設定すると同時起動は作動しません)";
-            // 
-            // cbNotifyFinishBattle
-            // 
-            this.cbNotifyFinishBattle.AutoSize = true;
-            this.cbNotifyFinishBattle.Location = new System.Drawing.Point(300, 38);
-            this.cbNotifyFinishBattle.Name = "cbNotifyFinishBattle";
-            this.cbNotifyFinishBattle.Size = new System.Drawing.Size(105, 16);
-            this.cbNotifyFinishBattle.TabIndex = 11;
-            this.cbNotifyFinishBattle.Text = "戦闘終了を通知";
-            this.cbNotifyFinishBattle.UseVisualStyleBackColor = true;
             // 
             // FormPreference
             // 

@@ -8,7 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.ServiceModel;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 using KCB;
+using Newtonsoft.Json.Linq;
 
 namespace KCBTimer
 {
@@ -232,6 +236,7 @@ namespace KCBTimer
 
             confDlg = new Form2();
             confDlg.TcpMode = bTcpMode;
+            confDlg.ParentForm = this;
             confDlg.FormClosed += (FormClosedEventHandler)
                 ((Object sender, FormClosedEventArgs e) => { confDlg = null; });
             confDlg.Show();
@@ -254,9 +259,16 @@ namespace KCBTimer
             notifyIcon1.BalloonTipTitle = title;
             notifyIcon1.BalloonTipText = msg;
             notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
-
-
             notifyIcon1.ShowBalloonTip(3000);
+
+            var slackWebhookUri = Properties.Settings.Default.SlackWebHookURI;
+            if(!string.IsNullOrEmpty(slackWebhookUri))
+            {
+                PostSlackMessageAsync(slackWebhookUri, Properties.Settings.Default.SlackUserName,
+                    Properties.Settings.Default.SlackIcon, Properties.Settings.Default.SlackChannel,
+                    Properties.Settings.Default.SlackMessagePrefix, title + ":" + msg);
+            }
+
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
@@ -276,6 +288,39 @@ namespace KCBTimer
         protected override void SetVisibleCore(bool value)
         {
             base.SetVisibleCore(allowshowdisplay ? value : allowshowdisplay);
+        }
+
+        private HttpClient _client = new HttpClient();
+
+        public Task<HttpResponseMessage> PostSlackMessageAsync(string entryPoint, string userName,
+            string icon, string channel, string prefix, string text)
+        {
+            var obj = new JObject();
+
+            if (!string.IsNullOrEmpty(channel))
+                obj.Add("channel", channel);
+
+            if (!string.IsNullOrEmpty(userName))
+                obj.Add("username", userName);
+
+            if (!string.IsNullOrEmpty(icon))
+            {
+                if (icon.StartsWith("https://") || icon.StartsWith("https://"))
+                    obj.Add("icon_url", icon);
+
+                if (icon.StartsWith(":") && icon.EndsWith(":"))
+                    obj.Add("icon_emoji", icon);
+            }
+
+            if (!string.IsNullOrEmpty(prefix))
+                text = prefix + text;
+
+            obj.Add("text", text);
+
+            var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "payload", obj.ToString() }, });
+
+            return _client.PostAsync(entryPoint, content);
+
         }
     }
 

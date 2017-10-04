@@ -90,8 +90,9 @@ namespace KCB2
 
 
             _httProxy = new HTTProxy();
-            _httProxy.BeforeRequest += new HTTProxy.HTTProxyCallbackHandler(_httProxy_BeforeRequest);
-            _httProxy.AfterSessionCompleted += new HTTProxy.HTTProxyCallbackHandler(_httProxy_AfterSessionCompleted);
+            _httProxy.BeforeRequest += _httProxy_BeforeRequest;
+            _httProxy.AfterSessionCompleted += _httProxy_AfterSessionCompleted;
+            _httProxy.RequestFailed += _httProxy_RequestFailed;
 
             ///過去の設定を引っ張ってる場合。
             if (Properties.Settings.Default.ProxyPort <= 0)
@@ -99,11 +100,31 @@ namespace KCB2
 
             _gsWrapper = new GSpread.SpreadSheetWrapper();
 
-            if (!_httProxy.Start(Properties.Settings.Default.ProxyPort))
-                MessageBox.Show("HttpListenerの起動に失敗しました。情報は取得されません。\n設定を確認してください");
-
-            else
+            try
+            {
+                _httProxy.Start(Properties.Settings.Default.ProxyPort);
                 UpdateProxyConfiguration();
+            }
+            catch (Exception e)
+            {
+                if (e is HttpListenerException)
+                {
+                    var ex = (HttpListenerException)e;
+                    MessageBox.Show(
+                        string.Format("HttpListenerの起動に失敗しました。情報は取得されません。\n設定を確認してください\n\nプレフィクス：{0}\nコード：0x{1}({2})\n例外：{3}",
+                        _httProxy.Prefix, ex.ErrorCode.ToString("x"), ex.ErrorCode, ex.Message)
+                        );
+
+                }
+                else
+                {
+                    MessageBox.Show(
+                        string.Format("HttpListenerの起動に失敗しました。情報は取得されません。\n設定を確認してください\n\nプレフィクス：{0}\n例外：{1}",
+                        _httProxy.Prefix, e.Message)
+                        );
+                }
+            }
+
 
 
             _logManager = new LogManager.LogManager(this);
@@ -131,13 +152,15 @@ namespace KCB2
         /// </summary>
         void UpdateProxyConfiguration()
         {
+            var proxyHost = "127.0.0.1";
             if (Properties.Settings.Default.UseUpstreamProxy)
             {
                 _httProxy.UpstreamProxy = new System.Net.WebProxy(
                     Properties.Settings.Default.UpstreamProxyHost,
                     (int)Properties.Settings.Default.UpstreamProxyPort);
 
-                HTTProxy.SetProcessProxy(string.Format("http=localhost:{0} https={1}:{2}",
+                HTTProxy.SetProcessProxy(string.Format("http={0}:{1} https={2}:{3}",
+                    proxyHost,
                     Properties.Settings.Default.ProxyPort,
                     Properties.Settings.Default.UpstreamProxyHost,
                     Properties.Settings.Default.UpstreamProxyPort), "");
@@ -145,8 +168,9 @@ namespace KCB2
             else
             {
                 _httProxy.UpstreamProxy = _sysProxy;
-
-                HTTProxy.SetProcessProxy(string.Format("http=localhost:{0}",
+                
+                HTTProxy.SetProcessProxy(string.Format("http={0}:{1}",
+                    proxyHost,
                     Properties.Settings.Default.ProxyPort), "");
             }
 
@@ -292,7 +316,8 @@ namespace KCB2
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MessageBox.Show("終了しますか？", "KCBr2", MessageBoxButtons.OKCancel,
-                 MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.OK)
+                 MessageBoxIcon.Question, MessageBoxDefaultButton.Button2,
+                 MessageBoxOptions.DefaultDesktopOnly) != DialogResult.OK)
             {
                 e.Cancel = true;
                 return;
@@ -442,7 +467,7 @@ namespace KCB2
                 return false;
 
             //スクロールバーを消す
-            webBrowser1.Document.Body.Style = "overflow-x:hidden;overflow-y:hidden";
+            webBrowser1.Document.Body.Style = "overflow-x: hidden;overflow-y: hidden; touch-action: none; -ms-content-zooming: none;";
 
             // iframeのオフセットを算出
             int frameOffsetLeft = 0, frameOffsetTop = 0;
@@ -537,6 +562,14 @@ namespace KCB2
                     return;
             }
 
+        }
+
+        void _httProxy_RequestFailed(HTTProxy.RequestFailedContext ctx)
+        {
+            ctx.Retry = MessageBox.Show(
+                string.Format("{0}へのリクエストが失敗しました\n理由:{1}\n\n再試行しますか？", ctx.Uri, ctx.Message), "KCBr2",
+                MessageBoxButtons.RetryCancel,MessageBoxIcon.Error,MessageBoxDefaultButton.Button1,MessageBoxOptions.DefaultDesktopOnly)
+                == DialogResult.Retry;
         }
 
         #endregion
@@ -786,6 +819,14 @@ namespace KCB2
         public void NotifyFinishBattle(string type)
         {
             _timerRPC.RPCFinishBattle(type);
+        }
+
+        public void UpdateSlotItemInfo(int ship_id)
+        {
+            if (_wndShipList != null)
+                _wndShipList.UpdateSlotItem(ship_id);
+
+            deckMemberList.RedrawFleetList();
         }
 
         #endregion
@@ -1226,6 +1267,19 @@ namespace KCB2
             currentQuestList = null;
         }
 
+        private void openUriToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new FormUriInput())
+            {
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    webBrowser1.Navigate(dlg.Uri);
+                    enemyFleetList.Visible = false;
+                    UpdateStatus("指定したURIへアクセスします");
+                }
+            }
+        }
+
         #endregion
 
         #region 出撃インターバルタイマ
@@ -1459,6 +1513,5 @@ namespace KCB2
             Debug.WriteLine("離脱判定を検出できず。1秒ごとに再チェックしに行きます。");
         }
         #endregion 夜戦突入前判定
-
     }
 }

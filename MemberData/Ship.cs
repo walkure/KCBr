@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq;
 
 namespace KCB2.MemberData
 {
@@ -189,10 +190,18 @@ namespace KCB2.MemberData
         /// <param name="shipMaster">艦船マスタ</param>
         public void AddShip(KCB.api_get_member.ApiDataShip data, MasterData.Ship shipMaster)
         {
-            var info = new Info(data, shipMaster);
+            Info info;
+            if (!_shipDic.TryGetValue(data.api_id, out info))
+            {
+                info = new Info(data, shipMaster);
+                _shipDic[data.api_id] = info;
+            }
+            else
+            {
+                info.Update(data, shipMaster);
+            }
             //Debug.WriteLine("Ship:" + info.ToString());
 
-            _shipDic[(int)data.api_id] = info;
             foreach (var item in info.SlotItem)
             {
                 _itemOwner[item.ID] = new SlotItemOwner(info);
@@ -220,6 +229,7 @@ namespace KCB2.MemberData
                 ship.Bullet.Now = it.api_bull;
                 for (int i = 0; i < ship.SlotItem.Count; i++)
                     ship.SlotItem[i].Count = it.api_onslot[i];
+                ship.Refresh();
             }
 
             return true;
@@ -311,7 +321,7 @@ namespace KCB2.MemberData
             var ship = GetShip(ship_id);
             if (ship == null)
                 return APIResponse.Error;
-
+            ship.Refresh();
             if (json.api_data.api_locked == 1)
             {
                 ship.Locked = true;
@@ -407,10 +417,22 @@ namespace KCB2.MemberData
                 public NowMax(double _now, double _max) { Now = (int)_now; Max = (int)_max; }
 
                 /// <summary>
+                /// 更新
+                /// </summary>
+                /// <param name="_now"></param>
+                /// <param name="_max"></param>
+                public void Update(double _now, double _max) { Now = (int)_now; Max = (int)_max; }
+
+                /// <summary>
                 /// コピーコンストラクタ
                 /// </summary>
                 /// <param name="org">複製元</param>
                 public NowMax(NowMax org) { Now = org.Now; Max = org.Max; }
+
+                /// <summary>
+                /// デフォルトのコンストラクタ
+                /// </summary>
+                public NowMax() { Now = 0; Max = 0; }
 
                 /// <summary>
                 /// IComparableインタフェイスの実装
@@ -648,20 +670,69 @@ namespace KCB2.MemberData
                         if (Info == null)
                             return 0;
 
+                        // 熟練度ボーナス
+                        Double lvBonus = Math.Sqrt(Info.Level);
+
                         //装備種別
+                        int typeBonus = 0;
                         switch (Info.TypeDetailNum)
                         {
                             case 6:  // 艦戦
-                            case 7:  // 艦爆(爆戦のみ対空値>0)
+                            case 45: // 水戦
+                                switch (Info.Level)
+                                {
+                                    case 0:
+                                    case 1:
+                                        typeBonus = 0;
+                                        break;
+                                    case 2:
+                                        typeBonus = 2;
+                                        break;
+                                    case 3:
+                                        typeBonus = 5;
+                                        break;
+                                    case 4:
+                                        typeBonus = 9;
+                                        break;
+                                    case 5:
+                                    case 6:
+                                        typeBonus = 14;
+                                        break;
+                                    case 7:
+                                        typeBonus = 22;
+                                        break;
+                                }
+                                break;
+                            case 7:  // 艦爆(爆戦の み対空値>0)
                             case 8:  // 艦攻
+                                break;
                             case 11: // 水爆
+                                switch (Info.Level)
+                                {
+                                    case 0:
+                                    case 1:
+                                        typeBonus = 0;
+                                        break;
+                                    case 2:
+                                    case 3:
+                                    case 4:
+                                        typeBonus = 1;
+                                        break;
+                                    case 5:
+                                    case 6:
+                                        typeBonus = 3;
+                                        break;
+                                    case 7:
+                                        typeBonus = 6;
+                                        break;
+                                }
                                 break;
                             default:
                                 return 0;
                         }
 
-                        // 制空値 = floor(装備対空 * sqrt(装備数))
-                        return (int)Math.Floor(Info.対空 * Math.Sqrt(Count));
+                        // 制空値 = floor(装備対空 * sqrt(装備数) + 練度ボーナス + 制空ボーナス)
+                        return (int)Math.Floor(Info.対空 * Math.Sqrt(Count) + lvBonus + typeBonus);
                     }
                 }
 
@@ -754,6 +825,7 @@ namespace KCB2.MemberData
                     FleetOrder = data.Order;
                     FleetNum = data.Num;
                 }
+                Refresh();
             }
 
             /// <summary>
@@ -763,6 +835,7 @@ namespace KCB2.MemberData
             public void UpdateNDock(int ndock)
             {
                 DockNum = ndock;
+                Refresh();
             }
             #endregion
 
@@ -1074,6 +1147,11 @@ namespace KCB2.MemberData
 
             #endregion パラメータ
 
+            /// <summary>
+            /// 更新時刻
+            /// </summary>
+            public DateTime LastUpdated { get; protected set; }
+
             #region 背景色や経験値算出サブルーチン
             /// <summary>
             /// コンディション値に応じた色の取得
@@ -1284,6 +1362,8 @@ namespace KCB2.MemberData
                 RepairTimeParam = org.RepairTimeParam;
                 SallyArea = org.SallyArea;
 
+                LastUpdated = org.LastUpdated;
+
             }
 
             /// <summary>
@@ -1294,11 +1374,6 @@ namespace KCB2.MemberData
             {
                 return new Info(this);
             }
-
-            /// <summary>
-            /// 継承クラス向けの基底コンストラクタ
-            /// </summary>
-            protected Info() { }
 
             /// <summary>
             /// APIの返すパラメータはアイテムにより強化された値を含んでいるので、
@@ -1322,14 +1397,20 @@ namespace KCB2.MemberData
                 Torpedo.Now -= itemInfo.雷撃;
                 if (Torpedo.Now < 0)
                     Torpedo.Now = 0;
-                /*
+                
                 AntiSubm.Now -= itemInfo.対潜;
                 if(AntiSubm.Now < 0)
                     AntiSubm.Now = 0;
+
                 Search.Now -= itemInfo.索敵;
                 if(Search.Now < 0)
                     Search.Now = 0;
-                */
+
+                Escape.Now -= itemInfo.砲撃回避;
+                if(Escape.Now < 0)
+                    Escape.Now = 0;
+
+
             }
 
             /// <summary>
@@ -1360,7 +1441,7 @@ namespace KCB2.MemberData
                         AppliedSlotItemInfo = true;
                     }
                 }
-
+                Refresh();
             }
 
             /// <summary>
@@ -1437,6 +1518,19 @@ namespace KCB2.MemberData
             public Info(KCB.api_get_member.ApiDataShip it, MasterData.Ship shipMaster)
             {
                 SlotItem = new List<SlotItemInfo>();
+                HP = new NowMax();
+                Fuel = new NowMax();
+                Bullet = new NowMax();
+
+                Escape = new NowMax();
+                Fire = new NowMax();
+                Lucky = new NowMax();
+                Torpedo = new NowMax();
+                Search = new NowMax();
+                Armor = new NowMax();
+                AntiAir = new NowMax();
+                AntiSubm = new NowMax();
+
                 Update(it, shipMaster);
             }
 
@@ -1459,9 +1553,9 @@ namespace KCB2.MemberData
                 RepairTimeParam = shipData.RepairTimeParam;
                 Speed = shipData.Speed;
 
-                HP = new Info.NowMax(it.api_nowhp, it.api_maxhp);
-                Fuel = new Info.NowMax(it.api_fuel, shipData.MaxFuel);
-                Bullet = new Info.NowMax(it.api_bull, shipData.MaxBullet);
+                HP.Update(it.api_nowhp, it.api_maxhp);
+                Fuel.Update(it.api_fuel, shipData.MaxFuel);
+                Bullet.Update(it.api_bull, shipData.MaxBullet);
 
                 //                    Debug.WriteLine(string.Format("ID:{0} Exp:{1},{2},{3}", ShipId, (int)it.api_exp[0], (int)it.api_exp[1], (int)it.api_exp[2]));
 
@@ -1470,14 +1564,14 @@ namespace KCB2.MemberData
                 UpdateLevel = (int)shipData.AfterLV;
                 Condition = (int)it.api_cond;
 
-                Escape = new Info.NowMax(it.api_kaihi[0], it.api_kaihi[1]);
-                Fire = new Info.NowMax(it.api_karyoku[0], it.api_karyoku[1]);
-                Lucky = new Info.NowMax(it.api_lucky[0], it.api_lucky[1]);
-                Torpedo = new Info.NowMax(it.api_raisou[0], it.api_raisou[1]);
-                Search = new Info.NowMax(it.api_sakuteki[0], it.api_sakuteki[1]);
-                Armor = new Info.NowMax(it.api_soukou[0], it.api_soukou[1]);
-                AntiAir = new Info.NowMax(it.api_taiku[0], it.api_taiku[1]);
-                AntiSubm = new Info.NowMax(it.api_taisen[0], it.api_taiku[1]);
+                Escape.Update(it.api_kaihi[0], it.api_kaihi[1]);
+                Fire.Update(it.api_karyoku[0], it.api_karyoku[1]);
+                Lucky.Update(it.api_lucky[0], it.api_lucky[1]);
+                Torpedo.Update(it.api_raisou[0], it.api_raisou[1]);
+                Search.Update(it.api_sakuteki[0], it.api_sakuteki[1]);
+                Armor.Update(it.api_soukou[0], it.api_soukou[1]);
+                AntiAir.Update(it.api_taiku[0], it.api_taiku[1]);
+                AntiSubm.Update(it.api_taisen[0], it.api_taisen[1]);
 
                 ShotRange = (int)it.api_leng;
                 Locked = (int)it.api_locked == 1;
@@ -1494,6 +1588,16 @@ namespace KCB2.MemberData
                 SlotNum = shipData.SlotNum;
                 AppliedSlotItemInfo = false;
                 SallyArea = it.api_sally_area;
+
+                Refresh();
+            }
+
+            /// <summary>
+            /// 最終更新時刻を更新
+            /// </summary>
+            public void Refresh()
+            {
+                LastUpdated = DateTime.Now;
             }
 
         }
@@ -1570,6 +1674,7 @@ namespace KCB2.MemberData
 
                 //即座にHPがMAXに戻る。NDockはいじらなくてよい
                 ship.HP.Now = ship.HP.Max;
+                ship.Refresh();
                 return true;
             }
 
@@ -1586,6 +1691,7 @@ namespace KCB2.MemberData
             var ship = GetShip(ship_id);
 
             ship.HP.Now = ship.HP.Max;
+            ship.Refresh();
             ship.UpdateNDock(0);
         }
 
@@ -1611,8 +1717,38 @@ namespace KCB2.MemberData
                 {
                     ship.HP.Now = it.CurrentHP;
                     ship.UpdateRepairTime();
+                    ship.Refresh();
                 }
             }
+        }
+
+        /// <summary>
+        /// 装備スロット順の入れ替えを反映
+        /// </summary>
+        /// <param name="shipId">装備スロット入れ替え対象</param>
+        /// <param name="slotItemOrder">入れ替え後のスロット順番</param>
+        public int UpdateSlotItemOrder(string shipId_s, List<int> slotItemOrder)
+        {
+            var ship = GetShip(shipId_s);
+            if (ship == null)
+                return -1 ;
+
+            lock (ship)
+            {
+                Dictionary<int, Info.SlotItemInfo> dic = ship.SlotItem.ToDictionary(n => n.ID);
+                ship.SlotItem.Clear();
+
+                foreach (var id in slotItemOrder)
+                {
+                    if (id == -1)
+                        continue;
+
+                    ship.SlotItem.Add(dic[id]);
+                    ship.Refresh();
+                }
+            }
+
+            return ship.ShipId;
         }
     }
 }

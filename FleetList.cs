@@ -101,22 +101,7 @@ namespace KCB2
             {
                 _selectedDeck = value;
 
-                ///指定した艦隊を登録する
-                for (int n = 0; n < 6; n++)
-                {
-                    if (_selectedDeck.Member.Count > n)
-                    {
-                        MemberData.Ship.Info shipInfo = _selectedDeck.Member[n];
-                        //艦隊メンバーが存在するとき
-                        SetFriendFleetValue(n, shipInfo);
-                    }
-                    else
-                    {
-                        ///メンバーが存在しない
-                        SetFriendFleetValue(n, null);
-                    }
-
-                }
+                RegisterFleetsInfo();
             }
         }
 
@@ -621,6 +606,33 @@ namespace KCB2
             toolTip1.SetToolTip(pbSlotItem, pbSlotItem.ToolTipText);
 
             ResumeLayout();
+        }
+
+        /// <summary>
+        /// 情報を描画する
+        /// </summary>
+        public void RegisterFleetsInfo()
+        {
+            if (_selectedDeck == null)
+                return;
+
+            ///指定した艦隊を登録する
+            for (int n = 0; n < 6; n++)
+            {
+                if (_selectedDeck.Member.Count > n)
+                {
+                    MemberData.Ship.Info shipInfo = _selectedDeck.Member[n];
+                    //艦隊メンバーが存在するとき
+                    SetFriendFleetValue(n, shipInfo);
+                }
+                else
+                {
+                    ///メンバーが存在しない
+                    SetFriendFleetValue(n, null);
+                }
+
+            }
+
         }
     }
 }

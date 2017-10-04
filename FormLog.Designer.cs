@@ -561,6 +561,8 @@
             // chartMaterial
             // 
             chartArea1.Name = "ChartArea1";
+            chartArea1.CursorX.IsUserEnabled = true;
+            chartArea1.CursorX.IsUserSelectionEnabled = true;
             this.chartMaterial.ChartAreas.Add(chartArea1);
             this.chartMaterial.Dock = System.Windows.Forms.DockStyle.Fill;
             legend1.Name = "Legend1";

@@ -13,28 +13,37 @@ namespace KCB2.MasterData
         ConcurrentDictionary<int, Param> _itemMaster = new ConcurrentDictionary<int, Param>();
         List<SlotItemMasterLVItem> _itemList = new List<SlotItemMasterLVItem>();
         static bool _bUseMasterData = Properties.Settings.Default.UseMasterDataView;
+        ConcurrentDictionary<int, string> _itemDetailTypeMaster = new ConcurrentDictionary<int, string>();
 
         /// <summary>
         /// 装備マスタ情報読み込み
         /// </summary>
         /// <param name="JSON"></param>
         /// <returns></returns>
-        public bool LoadItemMaster(List<KCB.api_start2.ApiData.ApiMstSlotitem> api_mst_slotitem)
+        public bool LoadItemMaster(List<KCB.api_start2.ApiData.ApiMstSlotitem> api_mst_slotitem,
+            List<KCB.api_start2.ApiData.ApiMstSlotitemEquiptype> api_mst_slotitem_equiptype)
         {
             _itemMaster.Clear();
+            _itemDetailTypeMaster.Clear();
+
             if (_bUseMasterData)
                 _itemList.Clear();
             //                foreach (dynamic item in (object[])json.api_data)
+
+            foreach (var it in api_mst_slotitem_equiptype)
+            {
+                _itemDetailTypeMaster[it.api_id] = it.api_name;
+            }
+
             foreach (var item in api_mst_slotitem)
             {
                 _itemMaster[(int)item.api_id] = new Param(item);
 
                 if (_bUseMasterData)
-                    _itemList.Add(new SlotItemMasterLVItem(item));
+                    _itemList.Add(new SlotItemMasterLVItem(this, item));
 
                 //                    Debug.WriteLine(_itemMaster[(int)item.api_id]);
             }
-
 
             return true;
         }
@@ -185,70 +194,20 @@ namespace KCB2.MasterData
                     case 34: return "戦闘糧食";
                     case 35: return "補給物資";
                     case 36: return "特型内火艇";
+                    case 37: return "陸上攻撃機";
+                    case 38: return "局地戦闘機";
+                    case 39: return "噴式戦闘爆撃機";
+                    case 40: return "噴式戦闘爆撃機";
+                    case 41: return "輸送機材";
+                    case 42: return "潜水艦装備";
+                    case 43: return "水上戦闘機";
+                    case 44: return "陸軍戦闘機";
+                    case 45: return "艦上夜間戦闘機";
+                    case 46: return "艦上夜間攻撃機";
                     default: return string.Format("未知({0})", itemType);
                 }
 
             }
-            /// <summary>
-            /// 装備辞典でのアイテム種別(2)
-            /// </summary>
-            /// 
-            /// <param name="dType">api_type[2]</param>
-            /// <returns></returns>
-            static public string GetItemDicType(int itemDetailType)
-            {
-                switch (itemDetailType)
-                {
-                    case 1: return "小口径主砲";
-                    case 2: return "中口径主砲";
-                    case 3: return "大口径主砲";
-                    case 4: return "副砲";
-                    case 5: return "魚雷";
-                    case 6: return "艦戦";
-                    case 7: return "艦爆";
-                    case 8: return "艦攻";
-                    case 9: return "艦偵";
-                    case 10: return "水上偵察機";
-                    case 11: return "水上爆撃機";
-                    case 12: return "小型電探";
-                    case 13: return "大型電探";
-                    case 14: return "ソナー";
-                    case 15: return "爆雷";
-                    case 16: return "(なし)";
-                    case 17: return "機関部強化";
-                    case 18: return "三式弾";
-                    case 19: return "徹甲弾";
-                    case 20: return "(なし)";
-                    case 21: return "機銃";
-                    case 22: return "特殊潜航艇";
-                    case 23: return "応急修理要員";
-                    case 24: return "上陸用舟艇";
-                    case 25: return "オートジャイロ";
-                    case 26: return "対潜哨戒機";
-                    case 27: return "追加装甲(中型)";
-                    case 28: return "追加装甲(大型)";
-                    case 29: return "探照灯";
-                    case 30: return "簡易輸送部材";
-                    case 31: return "艦艇修理施設";
-                    case 32: return "潜水艦魚雷";
-                    case 33: return "照明弾";
-                    case 34: return "艦隊司令部施設";
-                    case 35: return "航空要員";
-                    case 36: return "高射装置";
-                    case 37: return "対地装備";
-                    case 38: return "(なし)";
-                    case 39: return "水上艦要員";
-                    case 40: return "大型ソナー";
-                    case 41: return "大型飛行艇";
-                    case 42: return "大型探照灯";
-                    case 43: return "戦闘糧食";
-                    case 44: return "補給物資";
-                    case 45: return "多用途水上機";
-                    case 46: return "特型内火艇";
-                    default: return string.Format("未知({0})", itemDetailType);
-                }
-            }
-
 
             /// <summary>
             /// 艦載機装備ならtrue
@@ -331,6 +290,20 @@ namespace KCB2.MasterData
             }
         }
 
+        /// <summary>
+        /// 装備辞典でのアイテム種別(2)
+        /// </summary>
+        /// 
+        /// <param name="dType">api_type[2]</param>
+        /// <returns></returns>
+        public string GetItemDicType(int itemDetailType)
+        {
+            string typeName;
+            if (_itemDetailTypeMaster.TryGetValue(itemDetailType, out typeName))
+                return typeName;
+
+            return string.Format("未知[{0}]", itemDetailType);
+        }
 
 
         public class SlotItemMasterLVItem : System.Windows.Forms.ListViewItem,
@@ -399,23 +372,18 @@ namespace KCB2.MasterData
                     SubItems.Add("");
             }
 
-            public SlotItemMasterLVItem()
+            public SlotItemMasterLVItem(Item itemMaster, KCB.api_start2.ApiData.ApiMstSlotitem json)
             {
                 InitializeSubItem();
+                UpdateSlotItemInfo(itemMaster, json);
             }
 
-            public SlotItemMasterLVItem(KCB.api_start2.ApiData.ApiMstSlotitem json)
-            {
-                InitializeSubItem();
-                UpdateSlotItemInfo(json);
-            }
-
-            public void UpdateSlotItemInfo(KCB.api_start2.ApiData.ApiMstSlotitem json)
+            public void UpdateSlotItemInfo(Item itemMaster, KCB.api_start2.ApiData.ApiMstSlotitem json)
             {
                 SubItems[(int)ItemOrder.ID] = new LVIntSubItem(this, json.api_id);
                 SubItems[(int)ItemOrder.SortNo] = new LVIntSubItem(this, json.api_sortno);
                 SubItems[(int)ItemOrder.Name] = new LVStringSubItem(this, json.api_name);
-                SubItems[(int)ItemOrder.Type] = new LVSlotItemTypeSubItem(this, json.api_type);
+                SubItems[(int)ItemOrder.Type] = new LVSlotItemTypeSubItem(this, itemMaster, json.api_type);
                 //                    SubItems[(int)ItemOrder.Taik] = new LVIntSubItem(this, json.api_taik);
                 SubItems[(int)ItemOrder.Souk] = new LVIntSubItem(this, json.api_souk);
                 SubItems[(int)ItemOrder.Houg] = new LVIntSubItem(this, json.api_houg);
@@ -638,11 +606,11 @@ namespace KCB2.MasterData
 
             class LVSlotItemTypeSubItem : System.Windows.Forms.ListViewItem.ListViewSubItem, IComparable
             {
-                public LVSlotItemTypeSubItem(System.Windows.Forms.ListViewItem lvitOwner, List<int> values)
+                public LVSlotItemTypeSubItem(System.Windows.Forms.ListViewItem lvitOwner, Item itemMaster, List<int> values)
                     : base(lvitOwner, "")
                 {
                     Text = string.Format("{0},{1},{2}({4}),{3}({5})",
-                        values[0], values[1], values[2], values[3], Param.GetItemDicType(values[2]), Param.GetItemType(values[3]));
+                        values[0], values[1], values[2], values[3], itemMaster.GetItemDicType(values[2]), Param.GetItemType(values[3]));
                     Value = values[2];
                 }
                 public int Value { get; private set; }

@@ -88,7 +88,7 @@ namespace KCB2
         /// 最大艦娘数
         /// </summary>
         public int MaxShip { get; set; }
-        
+
         void updateShipListView(IEnumerable<MemberData.Ship.Info> ships)
         {
             lvShipList.BeginUpdate();
@@ -222,6 +222,31 @@ namespace KCB2
         }
 
         /// <summary>
+        /// 装備情報を更新
+        /// </summary>
+        /// <param name="ship_id"></param>
+        public void UpdateSlotItem(int ship_id)
+        {
+            if (InvokeRequired)
+                BeginInvoke((MethodInvoker)(() => _updateSlotItem(ship_id)));
+            else
+                _updateSlotItem(ship_id);
+        }
+
+        void _updateSlotItem(int ship_id)
+        {
+            lvShipList.BeginUpdate();
+            foreach (ShipListViewItem it in lvShipList.Items)
+            {
+                if (it.Info.ShipId == ship_id)
+                {
+                    it.UpdateItem(ShipListViewItem.ColumnIndex.SlotItems);
+                }
+            }
+            lvShipList.EndUpdate();
+        }
+
+        /// <summary>
         /// リストビューアイテム
         /// </summary>
         class ShipListViewItem : ListViewItem, IComparable<ShipListViewItem>
@@ -229,6 +254,11 @@ namespace KCB2
             //初期ソートは艦船ID
             static private int _column = (int)ColumnIndex.ShipId;
             static private SortOrder _order = SortOrder.Ascending;
+
+            /// <summary>
+            /// 最終更新時刻
+            /// </summary>
+            DateTime LastUpdated = DateTime.MinValue;
 
             static public int Column
             {
@@ -422,6 +452,12 @@ namespace KCB2
             {
                 Info = newInfo;
 
+                // データの更新がされていなければビューを更新しない
+                if (LastUpdated >= Info.LastUpdated)
+                    return;
+
+                LastUpdated = Info.LastUpdated;
+
                 SubItems[(int)ColumnIndex.ShipId].Text = Info.ShipId.ToString();
                 SubItems[(int)ColumnIndex.ShipSortNo].Text = Info.ShipSortNo.ToString();
 
@@ -516,6 +552,10 @@ namespace KCB2
                         break;
                     case ColumnIndex.Locked:
                         SubItems[(int)ColumnIndex.Locked].Text = Info.Locked.ToString();
+                        break;
+
+                    case ColumnIndex.SlotItems:
+                        ((SlotItemsLVSubItem)SubItems[(int)ColumnIndex.SlotItems]).Update(Info.SlotItem, Info.SlotNum, _iconIageList);
                         break;
 
                     default:

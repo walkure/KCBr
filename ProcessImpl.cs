@@ -17,7 +17,7 @@ namespace KCB2
                 return;
 
             //まず装備を読み込む
-            _masterItem.LoadItemMaster(json.api_data.api_mst_slotitem);
+            _masterItem.LoadItemMaster(json.api_data.api_mst_slotitem,json.api_data.api_mst_slotitem_equiptype);
 
             ///先に艦船種別を読んでおく。
             _masterShip.LoadShipType(json.api_data.api_mst_stype);
@@ -654,6 +654,69 @@ namespace KCB2
             _parent.UpdateDeckMemberList(_memberShip, _memberDeck.DeckList);
             _parent.UpdateItemList(_memberItem.ItemList);
             _parent.UpdateShipList(_memberShip.ShipList);
+        }
+
+        /// <summary>
+        /// /kcsapi/api_req_kaisou/slot_deprive
+        /// </summary>
+        /// <param name="queryParam"></param>
+        /// <param name="responseJson"></param>
+        /// <param name="_memberShip"></param>
+        /// <param name="_memberItem"></param>
+        void PullOutSlotItem(IDictionary<string, string> queryParam, string responseJson,
+            MemberData.Ship _memberShip, MemberData.Item _memberItem)
+        {
+            int srcShipId,dstShipId;
+
+            if(!int.TryParse(queryParam["api_unset_ship"],out srcShipId) ||
+                !int.TryParse(queryParam["api_set_ship"], out dstShipId) )
+                return;
+
+            var json = JsonConvert.DeserializeObject<KCB.api_req_kaisou.SlotDeprive>(responseJson);
+            if (json.api_result != 1)
+                return;
+
+            // 装備装着先変更
+            _memberShip.LoadShipInfo(new List<KCB.api_get_member.ApiDataShip>() { json.api_data.api_ship_data.api_unset_ship }
+                , _masterShip, json.api_data.api_ship_data.api_unset_ship.api_id);
+            _memberShip.LoadShipInfo(new List<KCB.api_get_member.ApiDataShip>() { json.api_data.api_ship_data.api_set_ship }
+                , _masterShip, json.api_data.api_ship_data.api_set_ship.api_id);
+
+            _memberItem.UpdateItemOwnerShip(_memberShip);
+
+            _memberShip.ApplySlotItemData(_memberItem);
+            _memberShip.UpdateDeckInfo(_memberDeck);
+
+            UpdateDetailStatus("装備を引き抜き装着しました");
+
+            _parent.UpdateSlotItemInfo(json.api_data.api_ship_data.api_unset_ship.api_id);
+            _parent.UpdateSlotItemInfo(json.api_data.api_ship_data.api_set_ship.api_id);
+
+        }
+
+        /// <summary>
+        /// /kcsapi/api_req_kaisou/slot_exchange_index
+        /// </summary>
+        /// <param name="queryParam"></param>
+        /// <param name="responseJson"></param>
+        /// <param name="_memberShip"></param>
+        void ChangeSlotItemIndex(string shipId_s, string responseJson,
+            MemberData.Ship _memberShip)
+        {
+
+            // 装備順番入れ替え後のスロット情報
+            var json = JsonConvert.DeserializeObject<KCB.api_req_kaisou.SlotExchangeIndex>(responseJson);
+            if (json.api_result != 1)
+                return;
+
+            // スロット入れ替えを反映
+            var ship_id = _memberShip.UpdateSlotItemOrder(shipId_s,json.api_data.api_slot);
+            if (ship_id < 0)
+                return;
+
+            UpdateDetailStatus("スロット入れ替えを反映しました");
+
+            _parent.UpdateSlotItemInfo(ship_id);
         }
     }
 }

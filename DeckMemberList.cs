@@ -398,8 +398,15 @@ namespace KCB2
             }
         }
 
+        /// <summary>
+        /// リスト再描画
+        /// </summary>
+        public void RedrawFleetList()
+        {
+            if (InvokeRequired)
+                BeginInvoke((MethodInvoker)(() => fleetList1.RegisterFleetsInfo()));
+            else
+                fleetList1.RegisterFleetsInfo();
+        }
     }
-
-
-
 }

@@ -43,9 +43,6 @@ namespace KCB2
             MasterData.Item.SlotItemMasterLVItem.InitializeColumn(lvSlotItem);
             lvSlotItem.LoadColumnWithOrder(Properties.Settings.Default.MasterSlotItemColumnWidth);
 
-            MasterData.Ship.ShipTypeLVItem.InitializeColumn(lvSType);
-            lvSType.LoadColumnWithOrder(Properties.Settings.Default.MasterShipTypeColumnWidth);
-
             if (!Properties.Settings.Default.MasterListBounds.IsEmpty)
                 Bounds = Properties.Settings.Default.MasterListBounds;
         }
@@ -95,6 +92,10 @@ namespace KCB2
 
             lvSType.BeginUpdate();
             lvSType.Items.Clear();
+
+            MasterData.Ship.ShipTypeLVItem.InitializeColumn(itemMaster, lvSType);
+            lvSType.LoadColumnWithOrder(Properties.Settings.Default.MasterShipTypeColumnWidth);
+
             lvSType.Items.AddRange(shipMaster.GetMasterSTypeLVItems());
             lvSType.EndUpdate();
 

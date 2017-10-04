@@ -198,17 +198,45 @@ namespace KCB2
 
             }
         }
-        public delegate void HTTProxyCallbackHandler(SessionInfo info);
+        public delegate void HTTProxyRequestProcessingCallbackHandler(SessionInfo info);
 
         /// <summary>
         /// セッションが終了した際に呼ばれる
         /// </summary>
-        public event HTTProxyCallbackHandler AfterSessionCompleted;
+        public event HTTProxyRequestProcessingCallbackHandler AfterSessionCompleted;
 
         /// <summary>
         /// プロキシがリクエストを受信し、サーバへ中継する前に呼ばれる
         /// </summary>
-        public event HTTProxyCallbackHandler BeforeRequest;
+        public event HTTProxyRequestProcessingCallbackHandler BeforeRequest;
+
+        public class RequestFailedContext
+        {
+            /// <summary>
+            /// リクエストURI
+            /// </summary>
+            public Uri Uri { get; private set; }
+
+            /// <summary>
+            /// エラーメッセージ
+            /// </summary>
+            public string Message { get; private set; }
+
+            /// <summary>
+            /// リクエストを再試行する場合はtrue
+            /// </summary>
+            public bool Retry = false;
+
+            public RequestFailedContext(string uri,string message)
+            {
+                Uri = new Uri(uri);
+                Message = message;
+            }
+
+        }
+        public delegate void HTTProxyRequestFailedCallbackHandler(RequestFailedContext ctx);
+
+        public event HTTProxyRequestFailedCallbackHandler RequestFailed;
 
         private IWebProxy _proxy = new WebProxy();
 
@@ -248,44 +276,47 @@ namespace KCB2
         private HttpListener _listener = null;
 
         /// <summary>
+        /// リッスンするプレフィクス
+        /// </summary>
+        public string Prefix { get; private set; }
+
+        /// <summary>
         /// プロキシをスタートする
         /// </summary>
         /// <param name="port">listenするポート</param>
-        /// <returns>失敗するとfalse</returns>
-        public bool Start(int port)
+        /// <returns>失敗すると例外を投げます</returns>
+        public void Start(int port)
         {
             if (!HttpListener.IsSupported)
             {
                 DebugOut("Not supported platform");
-                return false;
+                throw new PlatformNotSupportedException("HttpListener未対応プラットフォームです");
             }
 
             if (_listener != null)
             {
                 DebugOut("Already started.");
-                return false;
+                throw new InvalidOperationException("既に有効なHttpListenerが起動しています");
             }
 
+            Prefix = string.Format("http://127.0.0.1:{0}/", port);
             _listener = new HttpListener();
-            string prefix = string.Format("http://{0}:{1}/", IPAddress.Loopback, port);
-            _listener.Prefixes.Add(prefix);
-            DebugOut("Add HttpListener prefix:{0}",prefix);
             try
             {
+                _listener.Prefixes.Add(Prefix);
+                DebugOut("Add HttpListener prefix:{0}", Prefix);
                 _listener.Start();
             }
             catch(HttpListenerException ex)
             {
                 DebugOut("Exception at starting HttpListener\n{0}", ex.ToString());
-                return false;
+                _listener = null;
+                throw;
             }
 
 
             //リクエストの到着を待つ
             _listener.BeginGetContext(OnHTTPRequest, _listener);
-
-            return true;
-
         }
 
         /// <summary>
@@ -322,6 +353,12 @@ namespace KCB2
         private void OnHTTPRequest(IAsyncResult ar)
         {
             HttpListener listener = ar.AsyncState as HttpListener;
+            if(listener == null)
+            {
+                DebugOut("invalid state(IAsyncResult.AsyncState is not HttpListener)");
+                return;
+            }
+
             if (!listener.IsListening)
             {
                 DebugOut("not listening.");
@@ -359,7 +396,7 @@ namespace KCB2
             }
             catch (Exception ex)
             {
-                DebugOut("Exception {0}\n{1}", ctx.Request.RawUrl, ex.ToString());
+                DebugOut("Exception {0}\n{1}",ctx != null ? ctx.Request.RawUrl : "[ctx=null]", ex.ToString());
                 if (ctx != null)
                     ctx.Response.Abort();
             }
@@ -371,34 +408,36 @@ namespace KCB2
         /// <param name="ctx"></param>
         private void HandleHTTPRequest(HttpListenerContext ctx)
         {
-            SessionInfo info = new SessionInfo();
-
             HttpListenerRequest req = ctx.Request;
             HttpListenerResponse res = ctx.Response;
 
-            // どこから接続されたかと、加工されていないアドレス
-//            DebugOut("{3}) UserHost={0} Method={1} Request={2}",
-//                req.UserHostAddress,req.HttpMethod, req.RawUrl,Thread.CurrentThread.ManagedThreadId);
-
+            var info = new SessionInfo();
             info.Uri = new Uri(req.RawUrl);
 
-            HttpWebRequest webRequest = CreateHttpWebRequest(req);
+            HttpWebRequest webRequest = null;
+            HttpWebResponse webResponse = null;
+            string exMsg = "";
 
-            // ボディあったら送受信
-            if (req.HasEntityBody) // リクエストのボディがある (POST とか)
+            // ボディあったら読んでおく
+            if (req.HasEntityBody)
             {
-                if (AfterSessionCompleted != null && !info.Ignore)
+                using (var ms = new MemoryStream())
                 {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        TeeStream(req.InputStream, webRequest.GetRequestStream(),ms);
-                        info.Request.Body = ms.ToArray();
-                    }
+                    req.InputStream.CopyTo(ms);
+                    info.Request.Body = ms.ToArray();
                 }
-                else
-                {
-                    CopyStream(req.InputStream, webRequest.GetRequestStream());
-                }
+            }
+
+            // リトライ用のエンドポイント
+            beginRequest:
+
+            webRequest = CreateHttpWebRequest(req);
+
+            if (info.Request.Body != null)
+            {
+                var reqStream = webRequest.GetRequestStream();
+                reqStream.Write(info.Request.Body, 0, info.Request.Body.Length);
+                reqStream.Close();
             }
 
             if (BeforeRequest != null)
@@ -415,10 +454,7 @@ namespace KCB2
                 return;
             }
 
-
             // レスポンス取得
-            HttpWebResponse webResponse = null;
-            string exMsg = "";
             try
             {
                 webResponse = webRequest.GetResponse() as HttpWebResponse;
@@ -433,6 +469,16 @@ namespace KCB2
             // 失敗したら502を返す
             if (webResponse == null)
             {
+                if(RequestFailed != null)
+                {
+                    var eventCtx = new RequestFailedContext(req.RawUrl, exMsg);
+                    RequestFailed(eventCtx);
+                    if(eventCtx.Retry)
+                    {
+                        goto beginRequest;
+                    }
+                }
+
                 SendResponse(ctx.Response, new SessionInfo.HTTPResponse()
                 {
                     StatusCode = 502,
@@ -443,20 +489,23 @@ namespace KCB2
 
             SetHttpListenerResponse(ctx, webResponse);
 
+            var resStream = webResponse.GetResponseStream();
+
             if (AfterSessionCompleted != null && !info.Ignore)
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
                     try
                     {
-                        TeeStream(webResponse.GetResponseStream(), res.OutputStream, ms);
-                        webResponse.Close();
+                        resStream.CopyTo(ms);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        ms.CopyTo(res.OutputStream);
                         info.Response.UpdateResponse(res);
                         info.Response.ContentBody = ms.ToArray();
                     }
                     catch
                     {
-                        DebugOut("Exception Tee: {0}" , req.RawUrl);
+                        DebugOut("Exception Tee: {0}", req.RawUrl);
                         throw;
                     }
                 }
@@ -466,15 +515,17 @@ namespace KCB2
             {
                 try
                 {
-                    CopyStream(webResponse.GetResponseStream(), res.OutputStream);
-                    webResponse.Close();
+                    resStream.CopyTo(res.OutputStream);
                 }
                 catch
                 {
-                    DebugOut("Exception Relay: "+req.RawUrl);
+                    DebugOut("Exception Relay: " + req.RawUrl);
                     throw;
                 }
-          }
+            }
+
+            resStream.Close();
+            webResponse.Close();
         }
 
         /// <summary>
@@ -598,46 +649,6 @@ namespace KCB2
                         break;
                 }
             }
-        }
-
-        /// <summary>
-        /// ストリームをコピー
-        /// </summary>
-        /// <param name="src">コピー元</param>
-        /// <param name="dst">コピー先</param>
-        private void CopyStream(Stream src, Stream dst)
-        {
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ( (bytesRead = src.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                if(dst.CanWrite)
-                    dst.Write(buffer, 0, bytesRead);
-            }
-
-            src.Close();
-            dst.Close();
-        }
-
-        /// <summary>
-        /// ストリームを二カ所へコピー
-        /// </summary>
-        /// <param name="src">コピー元</param>
-        /// <param name="dst1">コピー先1</param>
-        /// <param name="dst2">コピー先2</param>
-        private void TeeStream(Stream src, Stream dst1, Stream dst2)
-        {
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ( (bytesRead = src.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                dst1.Write(buffer, 0, bytesRead);
-                dst2.Write(buffer, 0, bytesRead);
-            }
-
-            src.Close();
-            dst1.Close();
-            dst2.Close();
         }
 
         /// <summary>

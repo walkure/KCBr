@@ -332,6 +332,8 @@ namespace KCB
                     public object api_slottype44 { get; set; }
                     public object api_slottype45 { get; set; }
                     public object api_slottype46 { get; set; }
+                    public object api_slottype47 { get; set; }
+                    public object api_slottype48 { get; set; }
                 }
 
                 public List<ApiDataShip> api_ship_data { get; set; }
@@ -650,7 +652,6 @@ namespace KCB
                     public ApiSupportAiratack api_support_airatack { get; set; }
                     public ApiSupportHourai api_support_hourai { get; set; }
                 }
-
                 /// <summary>
                 /// 通常昼戦時の艦隊番号
                 /// </summary>
@@ -727,6 +728,14 @@ namespace KCB
                 /// 夜戦砲撃戦 昼戦時は存在しない(nullになる)
                 /// </summary>
                 public ApiHougeki api_hougeki { get; set; }
+                /// <summary>
+                /// 開幕対潜攻撃 実行された場合1
+                /// </summary>
+                public int api_opening_taisen_flag { get; set; }
+                /// <summary>
+                /// 開幕対潜攻撃
+                /// </summary>
+                public ApiHougeki api_opening_taisen { get; set; }
             }
             public int api_result { get; set; }
             public string api_result_msg { get; set; }
@@ -975,6 +984,46 @@ namespace KCB
             public string api_result_msg { get; set; }
             public ApiData api_data { get; set; }
         }
+
+        [Obfuscation(Exclude = true)]
+        public class SlotDeprive
+        {
+            [Obfuscation(Exclude = true)]
+            public class ApiData
+            {
+                [Obfuscation(Exclude = true)]
+                public class ApiShipData
+                {
+                    /// <summary>
+                    /// 装備をすっこ抜かれた艦娘の情報
+                    /// </summary>
+                    public api_get_member.ApiDataShip api_unset_ship { get; set; }
+                    /// <summary>
+                    /// 装備を装着された艦娘の情報
+                    /// </summary>
+                    public api_get_member.ApiDataShip api_set_ship { get; set; }
+                }
+                public ApiShipData api_ship_data { get; set; }
+                public object api_unset_list { get; set; }
+            }
+            public int api_result { get; set; }
+            public string api_result_msg { get; set; }
+            public ApiData api_data { get; set; }
+        }
+
+        [Obfuscation(Exclude = true)]
+        public class SlotExchangeIndex
+        {
+            [Obfuscation(Exclude = true)]
+            public class ApiData
+            {
+                public List<int> api_slot { get; set; }
+            }
+            public int api_result { get; set; }
+            public string api_result_msg { get; set; }
+            public ApiData api_data { get; set; }
+        }
+
     }
 
     [Obfuscation(Exclude = true)]

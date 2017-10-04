@@ -18,6 +18,7 @@ namespace KCBTimer
         }
 
         public bool TcpMode;
+        public new Form1 ParentForm;
 
         private void Form2_Load(object sender, EventArgs e)
         {
@@ -40,6 +41,11 @@ namespace KCBTimer
 
             tbNotifySound.Text = Properties.Settings.Default.NotifySound;
 
+            tbSlackChannel.Text = Properties.Settings.Default.SlackChannel;
+            tbSlackIcon.Text = Properties.Settings.Default.SlackIcon;
+            tbSlackUserName.Text = Properties.Settings.Default.SlackUserName;
+            tbSlackWebhookUri.Text = Properties.Settings.Default.SlackWebHookURI;
+            tbSlackMessagePrefix.Text = Properties.Settings.Default.SlackMessagePrefix;
         }
 
         private void btBrowseDock_Click(object sender, EventArgs e)
@@ -113,6 +119,12 @@ namespace KCBTimer
             Properties.Settings.Default.NetTcp = cbUseNetTcp.Checked;
             Properties.Settings.Default.NotifySound = tbNotifySound.Text;
 
+            Properties.Settings.Default.SlackChannel = tbSlackChannel.Text;
+            Properties.Settings.Default.SlackIcon = tbSlackIcon.Text;
+            Properties.Settings.Default.SlackUserName = tbSlackUserName.Text;
+            Properties.Settings.Default.SlackWebHookURI = tbSlackWebhookUri.Text;
+            Properties.Settings.Default.SlackMessagePrefix = tbSlackMessagePrefix.Text;
+
             DialogResult = DialogResult.OK;
             Close();
 
@@ -149,5 +161,19 @@ namespace KCBTimer
             }
         }
 
+        private void tbSlackNotifyTest_Click(object sender, EventArgs e)
+        {
+            if(string.IsNullOrEmpty(tbSlackWebhookUri.Text))
+            {
+                MessageBox.Show("Slack通知は無効になっています", "KCBTimer");
+                return;
+            }
+
+            if(ParentForm != null)
+            {
+                ParentForm.PostSlackMessageAsync(tbSlackWebhookUri.Text, tbSlackUserName.Text, tbSlackIcon.Text,tbSlackMessagePrefix.Text,
+                    tbSlackChannel.Text, "Slack通知テスト");
+            }
+        }
     }
 }

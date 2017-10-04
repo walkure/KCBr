@@ -119,11 +119,11 @@ namespace KCB2
                         return new NowMaxPaddingLVItem("雷装", _info.Torpedo, _pwupParams.雷撃);
 
                     case "回避":
-                        return new NowMaxPaddingMinusLVItem("回避", _info.Escape, _pwupParams.回避);
+                        return new NowMaxPaddingLVItem("回避", _info.Escape, _pwupParams.回避);
                     case "索敵":
-                        return new NowMaxPaddingMinusLVItem("索敵", _info.Search, _pwupParams.索敵);
+                        return new NowMaxPaddingLVItem("索敵", _info.Search, _pwupParams.索敵);
                     case "対潜":
-                        return new NowMaxPaddingMinusLVItem("対潜", _info.AntiSubm, _pwupParams.対潜);
+                        return new NowMaxPaddingLVItem("対潜", _info.AntiSubm, _pwupParams.対潜);
 
                     case "HP":
                         return new HPLVItem(_info);
@@ -188,27 +188,6 @@ namespace KCB2
                         SubItems.Add(string.Format("{0} (+{1})", nowMax.ToString(), padding));
                     else if(padding < 0)
                         SubItems.Add(string.Format("{0} ({1})", nowMax.ToString(), padding));
-                    else
-                        SubItems.Add(nowMax.ToString());
-                }
-            }
-
-            /// <summary>
-            /// 現在値-加算分/最大値　(+加算分)
-            /// </summary>
-            class NowMaxPaddingMinusLVItem : ListViewItem
-            {
-                public NowMaxPaddingMinusLVItem(string title, MemberData.Ship.Info.NowMax nowMax, int padding)
-                {
-                    Text = title;
-
-                    MemberData.Ship.Info.NowMax nowMax2 = new MemberData.Ship.Info.NowMax(nowMax);
-                    nowMax2.Now -= padding;
-
-                    if (padding > 0)
-                        SubItems.Add(string.Format("{0} (+{1})", nowMax2.ToString(), padding));
-                    else if (padding < 0)
-                        SubItems.Add(string.Format("{0} ({1})", nowMax2.ToString(), padding));
                     else
                         SubItems.Add(nowMax.ToString());
                 }

@@ -156,7 +156,6 @@ namespace KCB2
                 cbSyncronizeTimerProcess.Enabled = false;
             }
             cbNotifyFinishBattle.Checked = Properties.Settings.Default.NotifyFinishBattle;
-
         }
 
         private void btnApply_Click(object sender, EventArgs e)
